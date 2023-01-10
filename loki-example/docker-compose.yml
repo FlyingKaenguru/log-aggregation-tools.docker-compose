@@ -1,0 +1,34 @@
+version: "3.7"
+
+# set env variable COMPOSE_PROJECT_NAME and
+# label com.docker.compose.project
+name: loki-promtail
+
+services:
+  loki:
+    image: grafana/loki:2.6.1
+    ports:
+      - "3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.6.1
+#    volumes:
+#      - /var/log:/var/log
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      # custom config will read logs from the containers of this project
+      - ./promtail-config.yaml:/etc/promtail/config.yml
+      # to read container labels and logs
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers
+
+  # will be available at http://127.0.0.1:3000
+  # default credentials: admin/admin
+  grafana:
+    image: grafana/grafana:9.2.2
+    ports:
+      - "3000:3000"
+    volumes:
+      # automatically configure the loki datasource
+      - ./grafana/provisioning/:/etc/grafana/provisioning/

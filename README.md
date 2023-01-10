@@ -35,7 +35,7 @@ It is their routing mechanism that ultimately enables log analysis.
 Some of the most popular log agents are:
 
 * [Promtail][4] Promtail acquires logs, turns the logs into streams, and pushes the streams to Loki through an HTTP API.
-  The Promtail agent is designed for Loki installations, but many other Agents seamlessly integrate with Loki.
+  The Promtail agent is designed for Loki installations and therefore it is the default agent for Loki.
 
 * [Fluentd:][5] Fluentd is a cross-platform open source data collection software originally developed at Treasure Data under the Apache 2 license.
   It is written primarily in the Ruby programming language.
@@ -98,6 +98,12 @@ Here, all microservice components of Loki are run within a single process as a s
 **Required**
 * Config-files for Loki and Promtail
 
+### [Promtail Scraping (Service Discovery)][11]
+
+Before Promtail can send log data to Loki, it needs information about its environment and the existing applications whose logs are to be transmitted. 
+For this, Promtail makes use of a mechanism from Prometheus, service discovery. 
+Just like Prometheus, Promtail is configured with a scrape_configs.
+
 
 
 ---
@@ -112,3 +118,5 @@ Here, all microservice components of Loki are run within a single process as a s
 [8]: https://www.elastic.co/guide/en/kibana/master/introduction.html
 [9]: https://www.fluentd.org/plugins/all
 [10]: https://github.com/logstash-plugins
+[11]: https://grafana.com/docs/loki/latest/clients/promtail/scraping/
+

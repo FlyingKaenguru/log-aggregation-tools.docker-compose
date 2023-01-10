@@ -1,6 +1,14 @@
 # Purpose of the repository
 In this repository we will use both Elastic Stack and Grafana Loki with the three different log collectors Promtail, Logstash and Fluentd. As visualization tools we use Kibana and Grafana.
 
+![Grafana](https://img.shields.io/badge/grafana-ea6428.svg?style=for-the-badge&logo=grafana&logoColor=white)
+![elasticsearch](https://img.shields.io/badge/Elastic_Search-005571?style=for-the-badge&logo=elasticsearch&logoColor=white)
+![kibana](https://img.shields.io/badge/Kibana-005571?style=for-the-badge&logo=Kibana&logoColor=white)
+![Fluentd](https://img.shields.io/badge/Fluentd-64a5d0?style=for-the-badge&logo=Fluentd&logoColor=white)
+![Logstash](https://img.shields.io/badge/Logstash-64a5d0?style=for-the-badge&logo=Logstash&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+
+
 # Log-Aggregation
 ## What Is Log Aggregation
 

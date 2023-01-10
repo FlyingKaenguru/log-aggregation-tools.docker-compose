@@ -13,10 +13,11 @@ services:
 
   promtail:
     image: grafana/promtail:2.6.1
-#    volumes:
-#      - /var/log:/var/log
     command: -config.file=/etc/promtail/config.yml
+    ports:
+      - "9080:9080"
     volumes:
+      - /var/log:/var/log
       # custom config will read logs from the containers of this project
       - ./promtail-config.yaml:/etc/promtail/config.yml
       # to read container labels and logs
@@ -31,4 +32,4 @@ services:
       - "3000:3000"
     volumes:
       # automatically configure the loki datasource
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources

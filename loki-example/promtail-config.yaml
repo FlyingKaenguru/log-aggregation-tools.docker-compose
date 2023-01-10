@@ -23,10 +23,10 @@ scrape_configs:
         regex: '/(.*)'
         target_label: 'container'
 
-#  - job_name: system
-#    static_configs:
-#      - targets:
-#          - localhost
-#        labels:
-#          job: varlogs
-#          __path__: /var/log/*log
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*log

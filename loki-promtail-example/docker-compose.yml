@@ -19,7 +19,7 @@ services:
     volumes:
       - /var/log:/var/log
       # custom config will read logs from the containers of this project
-      - ./promtail-config.yaml:/etc/promtail/config.yml
+      - ./promtail/config/promtail-config.yaml:/etc/promtail/config.yml
       # to read container labels and logs
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/containers:/var/lib/docker/containers

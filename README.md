@@ -43,6 +43,7 @@ It is their routing mechanism that ultimately enables log analysis.
 Some of the most popular log agents are:
 
 * [Promtail][4] Promtail acquires logs, turns the logs into streams, and pushes the streams to Loki through an HTTP API.
+  It is usually deployed to every machine that has applications needed to be monitored.
   The Promtail agent is designed for Loki installations and therefore it is the default agent for Loki.
 
 * [Fluentd:][5] Fluentd is a cross-platform open source data collection software originally developed at Treasure Data under the Apache 2 license.
@@ -98,21 +99,31 @@ Here, all microservice components of Loki are run within a single process as a s
 <img src="image/Grafana_Loki.jpg" alt="Grafana Loki Promtail setup" width="200">
 
 **Approach**
-* Create the Config file for Loki and Promtail
+* Create a config file for Promtail
 * Create docker container for Loki, Promtail and Grafana using Docker compose
 * Setup Loki as data source in Grafana
 * Analyze the data that available in the Loki data source
 
-**Required**
-* Config-files for Loki and Promtail
+### Config-files for Promtail
 
-### [Promtail Scraping (Service Discovery)][11]
+Before Promtail can send log data to Loki, it needs information about its environment and the existing applications whose logs are to be transmitted.
+To do this, Promtail uses a mechanism from Prometheus called service discovery.
+Just like Prometheus, Promtail is configured with a scrape_configs. This can be found in the file [promtail-config.yaml](loki-promtail-example/promtail/config/promtail-config.yaml).
+Scrape_configs contains one or more entries that are executed for each discovered target.
+In Promtail, there are several types of labels. For example, there are "meta-labels", but also "__path__" labels - which Promtail uses after detection to find out where the file to be read is located.
 
-Before Promtail can send log data to Loki, it needs information about its environment and the existing applications whose logs are to be transmitted. 
-For this, Promtail makes use of a mechanism from Prometheus, service discovery. 
-Just like Prometheus, Promtail is configured with a scrape_configs.
+The metadata (pod name, file name, etc.) determined during service detection, which can be appended to the log line as a label for easier identification when querying logs in Loki,
+can be converted to a desired form using the relabel_configs.
+For this purpose, each entry in the scrape_configs can also contain a relabel_configs. 
+Relabel_configs are a set of operations that can be used, for example, to change a label to a different target name.
+They allow fine-grained control over what to include and what to discard, as well as over the final metadata to append to the log line (see official [documentation][11]).
 
-
+To allow more sophisticated filtering afterwards, Promtail allows labels to be set not only from service discovery, but also based on the content of individual log lines.
+The pipeline_stages can be used to add or update labels, correct the timestamp or completely rewrite log lines. A pipeline is comprised of a set of 4 stages (see official [documentation][12]).
+* Parsing stages (Parse the current log line and extract data out of it.)
+* Transform stages (Transform extracted data from previous stages)
+* Action stages (Take extracted data from previous stages and do something with them)
+* Filtering stages (optionally apply a subset of stages or drop entries based on some condition)
 
 ---
 
@@ -127,4 +138,5 @@ Just like Prometheus, Promtail is configured with a scrape_configs.
 [9]: https://www.fluentd.org/plugins/all
 [10]: https://github.com/logstash-plugins
 [11]: https://grafana.com/docs/loki/latest/clients/promtail/scraping/
+[12]: https://grafana.com/docs/loki/latest/clients/promtail/pipelines/
 

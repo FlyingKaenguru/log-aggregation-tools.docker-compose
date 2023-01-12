@@ -4,8 +4,6 @@ services:
     image: httpd
     ports:
       - "80:80"
-    links:
-      - fluentd
     logging:
       driver: "fluentd"
       options:
@@ -16,25 +14,23 @@ services:
     build: ./fluentd
     volumes:
       - ./fluentd/conf:/fluentd/etc
-    links:
-      - "elasticsearch"
     ports:
       - "24224:24224"
       - "24224:24224/udp"
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.0
     container_name: elasticsearch
     environment:
-      - "discovery.type=single-node"
+      discovery.type: single-node
+      xpack.license.self_generated.type: basic
+      xpack.security.enabled: false
     expose:
       - "9200"
     ports:
       - "9200:9200"
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.17.8
-    links:
-      - "elasticsearch"
+    image: docker.elastic.co/kibana/kibana:8.6.0
     ports:
       - "5601:5601"

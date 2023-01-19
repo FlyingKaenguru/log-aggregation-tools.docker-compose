@@ -8,7 +8,6 @@ In this repository we will use both Elastic Stack and Grafana Loki with the thre
 ![Logstash](https://img.shields.io/badge/Logstash-64a5d0?style=for-the-badge&logo=Logstash&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
-
 # Log-Aggregation
 ## What Is Log Aggregation
 
@@ -200,7 +199,7 @@ The configuration as well as the dashboard for this can be found in the folder [
 open the Dashboards tab on the left and select the "Promtail" dashboard.
 
 #### Read in data from a test app
-In the app-promtail folder you will find another [Docker-compose](./app-promtail/nginx-example.yaml) file. 
+In the app-promtail folder you will find another [Docker-compose](loki-promtail-example/app/nginx-example.yaml) file. 
 This creates an nginx app. As already in the Management Services, the Promtail labels are assigned here as well. 
 Since this is an application outside the management level, we enter "App" for the job. 
 This helps us to distinguish the applications later.
@@ -217,7 +216,7 @@ services:
       - 8080:80
 ````
 
-The Apache HTTP server benchmarking tool "[ApacheBench](https://httpd.apache.org/docs/current/programs/ab.html)" can be used to generate an arbitrary number of queries.
+The Apache HTTP server benchmarking tool "[ApacheBench][13]" can be used to generate an arbitrary number of queries.
 
 ApacheBench is a command line tool included in the apache2-utils package. In addition to the number of queries to send, a timeout limit can be configured for the query header. ab sends the queries, waits for a response (until a user-specified timeout), and prints statistics as a report.
 
@@ -242,4 +241,5 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 [10]: https://github.com/logstash-plugins
 [11]: https://grafana.com/docs/loki/latest/clients/promtail/scraping/
 [12]: https://grafana.com/docs/loki/latest/clients/promtail/pipelines/
+[13]: https://httpd.apache.org/docs/current/programs/ab.html
 

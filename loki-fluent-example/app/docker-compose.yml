@@ -1,0 +1,32 @@
+version: '3.8'
+
+#volumes:
+#  postgres-data:
+
+services:
+#  postgres:
+#    container_name: postgres
+#    image: postgres:15.1
+#    env_file:
+#      - "secrets/postgres.env"
+#    volumes:
+#      - postgres-data:/var/lib/postgresql/data/
+#    ports:
+#      - '5432:5432'
+#    logging:
+#      driver: fluentd
+#      options:
+#        fluentd-address: host.docker.internal:24224
+
+  nginx-app:
+    container_name: nginx-app
+    image: nginx
+    labels:
+      logging: "promtail"
+      job: "app"
+    ports:
+      - 8080:80
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: host.docker.internal:24224

@@ -99,46 +99,131 @@ Here, all microservice components of Loki are run within a single process as a s
 <img src="image/Grafana_Loki.jpg" alt="Grafana Loki Promtail setup" width="200">
 
 **Approach**
-* Create a config file for Promtail
 * Create docker container for Loki, Promtail and Grafana using Docker compose
+* Create a config file for Promtail
 * Setup Loki as data source in Grafana
 * Analyze the data that available in the Loki data source
+
+### Docker-Compose File
+
+The [docker-compose.yml](loki-promtail-example/docker-compose.yml) file defines the individual services (Loki, Promtail and Grafana).
+This includes, for example, the image to be used, the ports to be exposed, and volumes needed to be mounted.
+The Docker socket, which is needed to witness Docker events, is mounted in the Promtail service under volume.
+Since we have a filter built into the Promtail config (see next section), which is configured to only collect containers with the Docker label "logging=promtail" for logging and send them to Grafana Loki,
+this label must be defined in the individual services.
+The label "job" can later be used to distinguish between "management" and "app" applications.
+
+```yml
+    labels:
+      logging: "promtail"
+      job: "management"
+```
 
 ### Config-files for Promtail
 
 Before Promtail can send log data to Loki, it needs information about its environment and the existing applications whose logs are to be transmitted.
 To do this, Promtail uses a mechanism from Prometheus called service discovery.
-Just like Prometheus, Promtail is configured with a scrape_configs. This can be found in the file [promtail-config.yaml](loki-promtail-example/promtail/config/promtail-config.yaml).
+Just like Prometheus, Promtail is configured with a scrape_configs. 
 Scrape_configs contains one or more entries that are executed for each discovered target.
 In Promtail, there are several types of labels. For example, there are "meta-labels", but also "__path__" labels - which Promtail uses after detection to find out where the file to be read is located.
 
-The metadata (pod name, file name, etc.) determined during service detection, which can be appended to the log line as a label for easier identification when querying logs in Loki,
+The metadata (container_name, file name, etc.) determined during service detection, which can be appended to the log line as a label for easier identification when querying logs in Loki,
 can be converted to a desired form using the relabel_configs.
 For this purpose, each entry in the scrape_configs can also contain a relabel_configs. 
 Relabel_configs are a set of operations that can be used, for example, to change a label to a different target name.
 They allow fine-grained control over what to include and what to discard, as well as over the final metadata to append to the log line (see official [documentation][11]).
 
-```
-  - job_name: docker
-    # use docker.sock to filter containers
+In our promtail configuration [promtail-config.yaml](loki-promtail-example/promtail/config/promtail-config.yaml),
+the container logs are collected through the Docker socket and then filtered so that only Docker containers with the Docker labels "logging=promtail" are collected.
+Once the logs are collected, the existing meta labels are transformed using relabel_config. 
+This gives us the container name as well as logstream and logging job.
+
+```yml
+scrape_configs:
+  - job_name: container_scrape
     docker_sd_configs:
-      - host: "unix:///var/run/docker.sock"
-        refresh_interval: 15s
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
         filters:
           - name: label
-            values: ["com.docker.compose.project=loki-promtail"]
+            values: ["logging=promtail"]
     relabel_configs:
       - source_labels: ['__meta_docker_container_name']
         regex: '/(.*)'
         target_label: 'container'
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'logstream'
+      - source_labels: ['__meta_docker_container_label_job']
+        target_label: 'job'
 ```
 
-To allow more sophisticated filtering afterwards, Promtail allows labels to be set not only from service discovery, but also based on the content of individual log lines.
-The pipeline_stages can be used to add or update labels, correct the timestamp or completely rewrite log lines. A pipeline is comprised of a set of 4 stages (see official [documentation][12]).
+To allow more sophisticated filtering afterwards, Promtail allows labels to be set not only from service discovery, 
+but also based on the content of individual log lines.
+The pipeline_stages can be used to add or update labels, correct the timestamp or completely rewrite log lines. 
+A pipeline is comprised of a set of 4 stages (see official [documentation][12]).
 * Parsing stages (Parse the current log line and extract data out of it.)
 * Transform stages (Transform extracted data from previous stages)
 * Action stages (Take extracted data from previous stages and do something with them)
 * Filtering stages (optionally apply a subset of stages or drop entries based on some condition)
+
+###Setup Loki as data source in Grafana
+
+So that we do not have to manually configure Loki in Grafana later, 
+we can give the Grafana service a [datasource configuration](./loki-promtail-example/grafana/provisioning/datasources/loki.yml). 
+When starting the service, Grafana automatically connects to Loki.
+
+
+```yml
+apiVersion: 1
+
+datasources:
+  - name: Loki
+    type: loki
+    url: http://loki:3100
+    isDefault: true
+```
+
+###Analyze the data that available in the Loki data source
+
+Once you have everything prepared, you can start the services.
+
+``docker-compose up -d``
+
+Then navigate to grafana at http://localhost:3000 and select "explore" on the left. 
+Select Loki as the database and select the container you are interested in. 
+Run the query and you will see the logs at the bottom.
+
+<img src="image/loki-explore.jpg" width="400">
+
+The data can also be viewed in the dashboard provided. 
+The configuration as well as the dashboard for this can be found in the folder [Dashboards](./loki-promtail-example/grafana/provisioning/dashboards/). To display the dashboard in Grafana, 
+open the Dashboards tab on the left and select the "Promtail" dashboard.
+
+####Read in data from a test app
+In the app-promtail folder you will find another [Docker-compose](./app-promtail/nginx-example.yaml) file. 
+This creates an nginx app. As already in the Management Services, the Promtail labels are assigned here as well. 
+Since this is an application outside the management level, we enter "App" for the job. 
+This helps us to distinguish the applications later.
+
+````yml
+services:
+  nginx-app:
+    container_name: nginx-app
+    image: nginx
+    labels:
+      logging: "promtail"
+      job: "app"
+    ports:
+      - 8080:80
+````
+
+The Apache HTTP server benchmarking tool "[ApacheBench](https://httpd.apache.org/docs/current/programs/ab.html)" can be used to generate an arbitrary number of queries.
+
+ApacheBench is a command line tool included in the apache2-utils package. In addition to the number of queries to send, a timeout limit can be configured for the query header. ab sends the queries, waits for a response (until a user-specified timeout), and prints statistics as a report.
+
+The following command, should generate 100 logs in the nginx-app container in the stderr stream.
+
+````ab -n 100 -c 100 http://{Server}:8080/errortest````
 
 ---
 

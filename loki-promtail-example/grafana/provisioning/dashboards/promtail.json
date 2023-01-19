@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 4,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -245,7 +245,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "bytes_over_time({job=~\"$job\", container=~\"$instance|$container_name\"} [$__interval])",
+          "expr": "bytes_over_time({container=~\"$instance|$container_name\"} [$__interval])",
           "queryType": "range",
           "refId": "A"
         }
@@ -638,10 +638,10 @@
         "current": {
           "selected": true,
           "text": [
-            "nginx-app"
+            "loki"
           ],
           "value": [
-            "nginx-app"
+            "loki"
           ]
         },
         "datasource": {
@@ -664,7 +664,7 @@
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
-        "sort": 0,
+        "sort": 1,
         "type": "query"
       },
       {
@@ -678,9 +678,9 @@
         "name": "searchable_pattern",
         "options": [
           {
-            "selected": true,
-            "text": "",
-            "value": ""
+            "selected": false,
+            "text": "error",
+            "value": "error"
           }
         ],
         "query": "",
@@ -690,8 +690,8 @@
       {
         "current": {
           "selected": false,
-          "text": "app",
-          "value": "app"
+          "text": "management",
+          "value": "management"
         },
         "datasource": {
           "type": "loki",
@@ -753,8 +753,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Promtail",
-  "uid": "Qhxvej24z",
-  "version": 18,
+  "title": "Promtail Copy",
+  "uid": "xyei6STVz",
+  "version": 3,
   "weekStart": ""
 }

@@ -28,9 +28,6 @@ services:
       LOKI_URL: http://loki:3100
     deploy:
       mode: global
-    configs:
-      - source: loki_config
-        target: /fluentd/etc/loki/loki.conf
     networks:
       - network
     ports:

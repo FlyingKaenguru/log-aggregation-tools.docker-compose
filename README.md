@@ -118,6 +118,21 @@ For this purpose, each entry in the scrape_configs can also contain a relabel_co
 Relabel_configs are a set of operations that can be used, for example, to change a label to a different target name.
 They allow fine-grained control over what to include and what to discard, as well as over the final metadata to append to the log line (see official [documentation][11]).
 
+```
+  - job_name: docker
+    # use docker.sock to filter containers
+    docker_sd_configs:
+      - host: "unix:///var/run/docker.sock"
+        refresh_interval: 15s
+        filters:
+          - name: label
+            values: ["com.docker.compose.project=loki-promtail"]
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+```
+
 To allow more sophisticated filtering afterwards, Promtail allows labels to be set not only from service discovery, but also based on the content of individual log lines.
 The pipeline_stages can be used to add or update labels, correct the timestamp or completely rewrite log lines. A pipeline is comprised of a set of 4 stages (see official [documentation][12]).
 * Parsing stages (Parse the current log line and extract data out of it.)

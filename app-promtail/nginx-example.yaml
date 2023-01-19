@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  nginx-app:
+    container_name: nginx-app
+    image: nginx
+    labels:
+      logging: "promtail"
+      job: "app"
+    ports:
+      - 8080:80
+
+networks:
+    external:
+      name: logging-example

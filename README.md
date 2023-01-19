@@ -166,7 +166,7 @@ A pipeline is comprised of a set of 4 stages (see official [documentation][12]).
 * Action stages (Take extracted data from previous stages and do something with them)
 * Filtering stages (optionally apply a subset of stages or drop entries based on some condition)
 
-###Setup Loki as data source in Grafana
+### Setup Loki as data source in Grafana
 
 So that we do not have to manually configure Loki in Grafana later, 
 we can give the Grafana service a [datasource configuration](./loki-promtail-example/grafana/provisioning/datasources/loki.yml). 
@@ -183,7 +183,7 @@ datasources:
     isDefault: true
 ```
 
-###Analyze the data that available in the Loki data source
+### Analyze the data that available in the Loki data source
 
 Once you have everything prepared, you can start the services.
 
@@ -193,13 +193,13 @@ Then navigate to grafana at http://localhost:3000 and select "explore" on the le
 Select Loki as the database and select the container you are interested in. 
 Run the query and you will see the logs at the bottom.
 
-<img src="image/loki-explore.jpg" width="400">
+<img src="image/loki-explore.jpg" width="600">
 
 The data can also be viewed in the dashboard provided. 
 The configuration as well as the dashboard for this can be found in the folder [Dashboards](./loki-promtail-example/grafana/provisioning/dashboards/). To display the dashboard in Grafana, 
 open the Dashboards tab on the left and select the "Promtail" dashboard.
 
-####Read in data from a test app
+#### Read in data from a test app
 In the app-promtail folder you will find another [Docker-compose](./app-promtail/nginx-example.yaml) file. 
 This creates an nginx app. As already in the Management Services, the Promtail labels are assigned here as well. 
 Since this is an application outside the management level, we enter "App" for the job. 
@@ -224,6 +224,9 @@ ApacheBench is a command line tool included in the apache2-utils package. In add
 The following command, should generate 100 logs in the nginx-app container in the stderr stream.
 
 ````ab -n 100 -c 100 http://{Server}:8080/errortest````
+
+<img src="image/nginx-error-dashboard.jpg" width="600">
+After the command is executed, 100 entries are visible in the stderr stream in the dashboard.
 
 ---
 

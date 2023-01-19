@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -245,7 +245,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "bytes_over_time({container=~\"$instance|$container_name\"} [$__interval])",
+          "expr": "bytes_over_time({container=~\"$container_name\"} [$__interval])",
           "queryType": "range",
           "refId": "A"
         }
@@ -307,8 +307,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "{container=~\"$container_name\", job=~\"$job\"} |~ `(?i)$searchable_pattern`",
+          "editorMode": "builder",
+          "expr": "{container=~\"$container_name\"} |~ `(?i)$searchable_pattern`",
           "queryType": "range",
           "refId": "A"
         }
@@ -388,8 +388,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "sum(count_over_time(({container=~\"$container_name\", job=~\"$job\"} |~ `(?i)$searchable_pattern`)[$__interval]))",
+          "editorMode": "builder",
+          "expr": "sum(count_over_time({container=~\"$container_name\"} |~ `(?i)$searchable_pattern` [$__interval]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -558,7 +558,7 @@
           "refId": "A"
         }
       ],
-      "title": "Total count of $log_stream pie",
+      "title": "Total count of $log_stream",
       "type": "piechart"
     },
     {
@@ -624,7 +624,7 @@
           "refId": "A"
         }
       ],
-      "title": "Total count of log_stream",
+      "title": "Total count of log_stream in container \"$container_name\"",
       "type": "piechart"
     }
   ],
@@ -638,10 +638,10 @@
         "current": {
           "selected": true,
           "text": [
-            "loki"
+            "nginx-app"
           ],
           "value": [
-            "loki"
+            "nginx-app"
           ]
         },
         "datasource": {
@@ -678,7 +678,7 @@
         "name": "searchable_pattern",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "error",
             "value": "error"
           }
@@ -719,8 +719,8 @@
       {
         "current": {
           "selected": true,
-          "text": "stdout",
-          "value": "stdout"
+          "text": "stderr",
+          "value": "stderr"
         },
         "datasource": {
           "type": "loki",
@@ -753,8 +753,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Promtail Copy",
+  "title": "Promtail",
   "uid": "xyei6STVz",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }

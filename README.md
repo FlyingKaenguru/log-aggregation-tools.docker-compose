@@ -182,7 +182,7 @@ datasources:
     isDefault: true
 ```
 
-### Analyze the data that available in the Loki data source
+### Analyze the data that is available in the Loki data source
 
 Once you have everything prepared, you can start the services.
 
@@ -215,6 +215,8 @@ services:
     ports:
       - 8080:80
 ````
+Start with:
+``docker-compose -f nginx-example.yaml up -d``
 
 The Apache HTTP server benchmarking tool "[ApacheBench][13]" can be used to generate an arbitrary number of queries.
 

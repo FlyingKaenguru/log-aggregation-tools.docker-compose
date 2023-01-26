@@ -10,6 +10,7 @@ services:
       driver: fluentd
       options:
         fluentd-address: localhost:24224
+        tag: app
 
 networks:
   external:

@@ -29,6 +29,19 @@
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 19,
+      "panels": [],
+      "title": "general",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "loki",
         "uid": "P8E80F9AEF21F6940"
@@ -77,7 +90,7 @@
         "h": 4,
         "w": 5,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 2,
       "options": {
@@ -158,7 +171,7 @@
         "h": 4,
         "w": 5,
         "x": 5,
-        "y": 0
+        "y": 1
       },
       "id": 3,
       "options": {
@@ -220,7 +233,7 @@
         "h": 4,
         "w": 8,
         "x": 10,
-        "y": 0
+        "y": 1
       },
       "id": 14,
       "options": {
@@ -262,7 +275,7 @@
         "h": 4,
         "w": 4,
         "x": 18,
-        "y": 0
+        "y": 1
       },
       "id": 12,
       "options": {
@@ -288,7 +301,7 @@
         "h": 8,
         "w": 19,
         "x": 0,
-        "y": 4
+        "y": 5
       },
       "id": 6,
       "options": {
@@ -364,7 +377,7 @@
         "h": 8,
         "w": 3,
         "x": 19,
-        "y": 4
+        "y": 5
       },
       "id": 4,
       "options": {
@@ -465,7 +478,7 @@
         "h": 5,
         "w": 10,
         "x": 0,
-        "y": 12
+        "y": 13
       },
       "id": 10,
       "options": {
@@ -521,7 +534,7 @@
         "h": 5,
         "w": 6,
         "x": 10,
-        "y": 12
+        "y": 13
       },
       "id": 8,
       "options": {
@@ -587,7 +600,7 @@
         "h": 5,
         "w": 6,
         "x": 16,
-        "y": 12
+        "y": 13
       },
       "id": 15,
       "options": {
@@ -626,6 +639,211 @@
       ],
       "title": "Total count of log_stream in container \"$container_name\"",
       "type": "piechart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 21,
+      "panels": [],
+      "title": "nginx",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by (status) (count_over_time({container=\"nginx-app\"} | pattern `<_> - - <_> \"<method> <_> <_>\" <status> <_> <_> \"<_>\" <_>`[1m])) ",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Nginx status code",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 10,
+        "x": 12,
+        "y": 19
+      },
+      "id": 23,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "builder",
+          "expr": "sum by(remote_addr) (count_over_time({container=\"nginx-app\", logstream=\"stdout\"} | pattern `<remote_addr> - -` [$__range]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Visitor IPs",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 10,
+        "x": 12,
+        "y": 22
+      },
+      "id": 24,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "builder",
+          "expr": "{container=\"nginx-app\", logstream=\"stdout\"} | pattern `<remote_addr> - - <time_local> \"<method> <path> <_>\" <status> <_> <_> \"<_>\" <_>` | json | line_format `{{.remote_addr}} ➡️ {{.method}} on Path '{{.path}}' and HTTP status: {{.status}}`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Nginx status code",
+      "type": "logs"
     }
   ],
   "refresh": "5s",
@@ -679,8 +897,8 @@
         "options": [
           {
             "selected": true,
-            "text": "error",
-            "value": "error"
+            "text": "",
+            "value": ""
           }
         ],
         "query": "",
@@ -690,8 +908,8 @@
       {
         "current": {
           "selected": false,
-          "text": "management",
-          "value": "management"
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "loki",
@@ -719,8 +937,8 @@
       {
         "current": {
           "selected": true,
-          "text": "stderr",
-          "value": "stderr"
+          "text": "stdout",
+          "value": "stdout"
         },
         "datasource": {
           "type": "loki",
@@ -748,13 +966,13 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Promtail",
   "uid": "xyei6STVz",
-  "version": 2,
+  "version": 7,
   "weekStart": ""
 }

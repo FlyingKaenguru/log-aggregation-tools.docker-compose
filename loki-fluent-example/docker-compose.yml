@@ -15,9 +15,10 @@ services:
       - network
     logging:
       options:
-        tag: infra.monitoring
+        tag: job.infra
 
   fluentd:
+    container_name: fluentd
     image: grafana/fluent-plugin-loki:master
     command:
       - "fluentd"
@@ -33,6 +34,7 @@ services:
     ports:
       - '24224:24224'
     volumes:
+      - ./plugins:/fluentd/plugins
       - host_logs:/var/log
       # Needed for journald log ingestion:
       - /etc/machine-id:/etc/machine-id
@@ -44,6 +46,9 @@ services:
       - type: bind
         source: /var/lib/docker/containers
         target: /fluentd/log/containers
+    logging:
+      options:
+        tag: job.infra
 
   # will be available at http://127.0.0.1:3000
   grafana:
@@ -61,6 +66,9 @@ services:
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     networks:
       - network
+    logging:
+      options:
+        tag: job.infra
 
 volumes:
   host_logs:

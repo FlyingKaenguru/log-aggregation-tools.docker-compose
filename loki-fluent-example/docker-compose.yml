@@ -36,12 +36,6 @@ services:
     ports:
       - '24224:24224'
     volumes:
-#      - ./plugins:/fluentd/plugins
-#      - host_logs:/var/log
-#      # Needed for journald log ingestion:
-#      - /etc/machine-id:/etc/machine-id
-#      - /dev/log:/dev/log
-#      - /var/run/systemd/journal/:/var/run/systemd/journal/
       - type: bind
         source: ./fluentd/config/fluent.conf
         target: /fluentd/etc/fluent.conf

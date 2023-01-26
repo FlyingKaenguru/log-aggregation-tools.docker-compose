@@ -14,8 +14,10 @@ services:
     networks:
       - network
     logging:
+      driver: fluentd
       options:
-        tag: job.infra
+        fluentd-address: localhost:24224
+        tag: infra
 
   fluentd:
     container_name: fluentd
@@ -34,21 +36,18 @@ services:
     ports:
       - '24224:24224'
     volumes:
-      - ./plugins:/fluentd/plugins
-      - host_logs:/var/log
-      # Needed for journald log ingestion:
-      - /etc/machine-id:/etc/machine-id
-      - /dev/log:/dev/log
-      - /var/run/systemd/journal/:/var/run/systemd/journal/
+#      - ./plugins:/fluentd/plugins
+#      - host_logs:/var/log
+#      # Needed for journald log ingestion:
+#      - /etc/machine-id:/etc/machine-id
+#      - /dev/log:/dev/log
+#      - /var/run/systemd/journal/:/var/run/systemd/journal/
       - type: bind
-        source: ./config/fluent.conf
+        source: ./fluentd/config/fluent.conf
         target: /fluentd/etc/fluent.conf
       - type: bind
         source: /var/lib/docker/containers
         target: /fluentd/log/containers
-    logging:
-      options:
-        tag: job.infra
 
   # will be available at http://127.0.0.1:3000
   grafana:
@@ -67,8 +66,10 @@ services:
     networks:
       - network
     logging:
+      driver: fluentd
       options:
-        tag: job.infra
+        fluentd-address: localhost:24224
+        tag: infra
 
 volumes:
   host_logs:

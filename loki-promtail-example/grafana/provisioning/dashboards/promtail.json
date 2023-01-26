@@ -755,6 +755,7 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -779,7 +780,7 @@
       },
       "id": 23,
       "options": {
-        "displayMode": "lcd",
+        "displayMode": "gradient",
         "minVizHeight": 10,
         "minVizWidth": 0,
         "orientation": "horizontal",
@@ -790,7 +791,10 @@
           "fields": "",
           "values": false
         },
-        "showUnfilled": true
+        "showUnfilled": true,
+        "text": {
+          "valueSize": 1
+        }
       },
       "pluginVersion": "9.2.2",
       "targets": [
@@ -973,6 +977,6 @@
   "timezone": "",
   "title": "Promtail",
   "uid": "xyei6STVz",
-  "version": 7,
+  "version": 9,
   "weekStart": ""
 }

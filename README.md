@@ -1,5 +1,5 @@
 # Purpose of the repository
-In this repository we will use both Elastic Stack and Grafana Loki with the three different log collectors Promtail, Logstash and Fluentd. As visualization tools we use Kibana and Grafana.
+This repository is intended to give a first insight into the functionality of the Elastic Stack as well as Grafana Loki with the three different log collectors Promtail, Logstash and Fluentd. Kibana and Grafana are used as visualization tools. The log aggregators will be rolled out using Docker Compose.
 
 ![Grafana](https://img.shields.io/badge/grafana-ea6428.svg?style=for-the-badge&logo=grafana&logoColor=white)
 ![elasticsearch](https://img.shields.io/badge/Elastic_Search-005571?style=for-the-badge&logo=elasticsearch&logoColor=white)
@@ -27,7 +27,7 @@ that forward messages to collectors, which in turn forward them to a central loc
 
 
 * **PLG Stack:**
-  The PLG stack, which consists of Promtail, Loki, and Grafana, is mostly known as Grafana Loki.
+  The PLG stack, which consists of Promtail, Loki, and Grafana, is mostly known as Grafana Loki. The Promtail agent is designed for Loki installations, but many other agents integrate seamlessly with Loki. For example, Fluentd and Logstash. 
 
   Grafana Loki is a horizontally scalable, highly available, multi-tenant log aggregation system inspired by Prometheus.
   Unlike other logging systems, a Loki index is built from labels, leaving the original log message unindexed. Loki stores all data in a single object storage backend like S3.

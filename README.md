@@ -76,7 +76,9 @@ Grafana and Kibana are two popular open source tools that help users visualize a
 
 ## Query Languages
 
-* LogQL is the query language for Loki. It is inspired my PromQL (Prometheus query language) and uses log labels for filtering and selecting the log data.
+* [LogQL][14] is the query language for Grafana Loki. It is inspired by PromQL (Prometheus query language) and uses log labels for filtering and selecting the log data.
+  There are two types of LogQL queries. **Log queries** return the contents of log lines, 
+  whereas **metric queries** extend log queries to calculate values based on the query results.
 * Elasticsearch uses Query DSL and Lucene query language which provides full-text search capability.
 
 ------------------------------------
@@ -244,4 +246,5 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 [11]: https://grafana.com/docs/loki/latest/clients/promtail/scraping/
 [12]: https://grafana.com/docs/loki/latest/clients/promtail/pipelines/
 [13]: https://httpd.apache.org/docs/current/programs/ab.html
+[14]: https://grafana.com/docs/loki/latest/logql/
 

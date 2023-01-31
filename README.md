@@ -76,9 +76,64 @@ Grafana and Kibana are two popular open source tools that help users visualize a
 
 ## Query Languages
 
-* [LogQL][14] is the query language for Grafana Loki. It is inspired by PromQL (Prometheus query language) and uses log labels for filtering and selecting the log data.
-  There are two types of LogQL queries. **Log queries** return the contents of log lines, 
-  whereas **metric queries** extend log queries to calculate values based on the query results.
+### [LogQL][14] 
+LogQL is the query language for Grafana Loki. It is inspired by PromQL (Prometheus query language) and uses log labels for filtering and selecting the log data.
+There are two types of LogQL queries. **Log queries** return the contents of log lines, 
+whereas **metric queries** extend log queries to calculate values based on the query results.
+
+A LogQL query consists of two parts: The Log Stream Selector and a search expression. A stream can be selected by specifying one or more labels:
+
+This sample query searches for logs where the value of the label 'container' matches the container name and also matches the regular expression.
+
+<img src="image/Logstream_selector.jpg" alt="Log stream selector" width="400">
+
+To search the stream for a certain string, a search expression can be used.
+This can be a simple match with `|=` or a regular expression using `|~`.
+The whole thing can also be negated by using a `!` instead of the pipe. Here are a few examples:
+
+```yml
+{app="nginx"} |= "GET"
+{app="nginx"} |~ "200|201|202"
+{app="nginx"} != "GET"
+{app="nginx"} !~ "200|201|202"
+```
+
+#### Labels
+Labels are key-value pairs and can be defined arbitrarily, including in the Scrape configuration. 
+The combination of key and value of each label defines a stream [see][15].
+
+```yml
+scrape_configs:
+  - job_name: system
+    pipeline_stages:
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: syslog
+          __path__: /var/log/syslog
+```
+
+The configuration `job=syslog` will tail one file and assign one label. It could be queried with `{job=”syslog”}`.
+
+#### Loki Pattern Parser
+Since Loki v2.3.0 it is possible to dynamically create new labels at query time by using a pattern parser in the LogQL query.
+
+To split, for example, the contents of an Nginx log line into several components and use them as labels for further queries, a pattern parser can be used.
+This way, the remote_addr, method, request, protocol, and status values among many others can be extracted from the following example.
+```yml
+2023-01-31 13:43:56	stdout    172.17.2.1 - - [31/Jan/2023:12:43:56 +0000] "GET /test HTTP/1.0" 404 153 "-" "ApacheBench/2.3" "-"
+```
+```yml
+{job="nginx"} | pattern `<_> - - <_> "<method> <_> <_>" <status> <_> <_> "<_>" <_>`
+```
+The above query passes the pattern to the Nginx log stream results and adds two additional labels method and status (This can be optionally extended). 
+These labels can then be used to execute metric or filter queries.
+
+In the dashboard [Promtail](Analyze the data that is available in the Loki data source) several queries can be found where a pattern was used to determine the e.g. request method.
+More detailed documentation about the pattern parser can be found at the following [link][16].
+
+### Query DSL and Lucene query language
 * Elasticsearch uses Query DSL and Lucene query language which provides full-text search capability.
 
 ------------------------------------
@@ -247,4 +302,5 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 [12]: https://grafana.com/docs/loki/latest/clients/promtail/pipelines/
 [13]: https://httpd.apache.org/docs/current/programs/ab.html
 [14]: https://grafana.com/docs/loki/latest/logql/
-
+[15]: https://grafana.com/blog/2020/04/21/how-labels-in-loki-can-make-log-queries-faster-and-easier/#what-is-a-label?
+[16]: https://grafana.com/blog/2021/08/09/new-in-loki-2.3-logql-pattern-parser-makes-it-easier-to-extract-data-from-unstructured-logs/

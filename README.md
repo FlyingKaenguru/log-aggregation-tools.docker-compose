@@ -1,5 +1,9 @@
-# Purpose of the repository
-This repository is intended to give a first insight into the functionality of the Elastic Stack as well as Grafana Loki with the three different log collectors Promtail, Logstash and Fluentd. Kibana and Grafana are used as visualization tools. The log aggregators will be rolled out using Docker Compose.
+# Philosophy
+This repository is intended to give a first insight into the functionality of the Elastic Stack as well as Grafana Loki with the three different log collectors Promtail, Logstash and Fluentd. Kibana and Grafana will be used as visualization tools. The log aggregators will be rolled out using Docker Compose.
+
+The goal is to provide the easiest possible entry point for anyone who feels like experimenting with these technologies. The default configuration is intentionally kept minimal. It relies on no external dependencies and uses as little custom automation as necessary to make things work.
+
+There is an emphasis on good documentation, so this repository serves as a template and can be modified by anyone.
 
 ![Grafana](https://img.shields.io/badge/grafana-ea6428.svg?style=for-the-badge&logo=grafana&logoColor=white)
 ![elasticsearch](https://img.shields.io/badge/Elastic_Search-005571?style=for-the-badge&logo=elasticsearch&logoColor=white)

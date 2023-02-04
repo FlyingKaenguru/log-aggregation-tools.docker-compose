@@ -149,11 +149,26 @@ More detailed documentation about the pattern parser can be found at the followi
 ### Query DSL and Lucene query language
 * Elasticsearch uses Query DSL and Lucene query language which provides full-text search capability.
 
+
+
+
+
+
+
+
+
 ------------------------------------
+# Installation & Configuration Tutorial
+## Requirements
+ * [Docker Compose][18] version 1.25.5 or newer (including 3.8 compose version)
+ * [Docker Engine][19] version 19.03.0+ or newer ([including
+   Compose file format 3.8][20])
 
-# Grafana Loki Installation & Configuration Tutorial
+## Grafana Loki 
 
-## Deployment modes
+<img src="image/Grafana_Loki.jpg" alt="Grafana Loki Promtail setup" width="200">
+
+### Deployment modes
 There are three different ways to roll out Loki. To learn more about the different modes, please read the [official documentation][2].
 
 * Monolithic mode
@@ -163,9 +178,7 @@ There are three different ways to roll out Loki. To learn more about the differe
 In our use case, we run Loki as a monolith. This is the simplest mode of operation.
 Here, all microservice components of Loki are run within a single process as a single binary or Docker image.
 
-## Grafana Loki with Promtail rolled out with Docker Compose
-
-<img src="image/Grafana_Loki.jpg" alt="Grafana Loki Promtail setup" width="200">
+### Grafana Loki with Promtail
 
 **Approach**
 * Create docker container for Loki, Promtail and Grafana using Docker compose
@@ -173,12 +186,12 @@ Here, all microservice components of Loki are run within a single process as a s
 * Setup Loki as data source in Grafana
 * Analyze the data that available in the Loki data source
 
-### Docker-Compose File
+#### Docker-Compose File
 
 The [docker-compose.yml](loki-promtail-example/docker-compose.yml) file defines the individual services (Loki, Promtail and Grafana).
 This includes, for example, the image to be used, the ports to be exposed, and volumes needed to be mounted.
 The Docker socket, which is needed to witness Docker events, is mounted in the Promtail service under volume.
-Since we have a filter built into the Promtail config (see next section), which is configured to only collect containers with the Docker label "logging=promtail" for logging and send them to Grafana Loki,
+Since we have a filter built into the Promtail config (see next section), which is configured to only collect containers with the Docker label `logging=promtail` for logging and send them to Grafana Loki,
 this label must be defined in the individual services.
 The label "job" can later be used to distinguish between "management" and "app" applications.
 
@@ -188,13 +201,13 @@ The label "job" can later be used to distinguish between "management" and "app" 
       job: "management"
 ```
 
-### Config-files for Promtail
+#### Config-files for Promtail
 
 Before Promtail can send log data to Loki, it needs information about its environment and the existing applications whose logs are to be transmitted.
 To do this, Promtail uses a mechanism from Prometheus called service discovery.
 Just like Prometheus, Promtail is configured with a scrape_configs. 
 Scrape_configs contains one or more entries that are executed for each discovered target.
-In Promtail, there are several types of labels. For example, there are "meta-labels", but also "__path__" labels - which Promtail uses after detection to find out where the file to be read is located.
+In Promtail, there are several types of labels. For example, there are `meta-labels`, but also `__path__` labels - which Promtail uses after detection to find out where the file to be read is located.
 
 The metadata (container_name, file name, etc.) determined during service detection, which can be appended to the log line as a label for easier identification when querying logs in Loki,
 can be converted to a desired form using the relabel_configs.
@@ -203,7 +216,7 @@ Relabel_configs are a set of operations that can be used, for example, to change
 They allow fine-grained control over what to include and what to discard, as well as over the final metadata to append to the log line (see official [documentation][11]).
 
 In our promtail configuration [promtail-config.yaml](loki-promtail-example/promtail/config/promtail-config.yaml),
-the container logs are collected through the Docker socket and then filtered so that only Docker containers with the Docker labels "logging=promtail" are collected.
+the container logs are collected through the Docker socket and then filtered so that only Docker containers with the Docker labels `logging=promtail` are collected.
 Once the logs are collected, the existing meta labels are transformed using relabel_config. 
 This gives us the container name as well as logstream and logging job.
 
@@ -235,7 +248,7 @@ A pipeline is comprised of a set of 4 stages (see official [documentation][12]).
 * Action stages (Take extracted data from previous stages and do something with them)
 * Filtering stages (optionally apply a subset of stages or drop entries based on some condition)
 
-### Setup Loki as data source in Grafana
+#### Setup Loki as data source in Grafana
 
 So that we do not have to manually configure Loki in Grafana later, 
 we can give the Grafana service a [datasource configuration](./loki-promtail-example/grafana/provisioning/datasources/loki.yml). 
@@ -252,7 +265,7 @@ datasources:
     isDefault: true
 ```
 
-### Analyze the data that is available in the Loki data source
+#### Analyze the data that is available in the Loki data source
 
 Once you have everything prepared, you can start the services.
 
@@ -299,8 +312,162 @@ The following command, should generate 100 logs in the nginx-app container in th
 <img src="image/nginx-error-dashboard.jpg" width="600">
 After the command is executed, 100 entries are visible in the stderr stream in the dashboard.
 
----
+### Grafana Loki with Fluentd
 
+**Approach**
+* Create docker container for Loki, Fluentd and Grafana using Docker compose
+* Create a config file for Fluentd
+* Setup Loki as data source in Grafana
+* Analyze the data that available in the Loki data source
+
+#### Docker-Compose File for Fluentd
+
+The [docker-compose.yml](loki-fluent-example/docker-compose.yml) file defines the individual services (Loki, Fluentd and Grafana).
+This includes, for example, the image to be used, the ports to be exposed, and volumes needed to be mounted.
+Unlike the configuration with Promtail, we do not connect the Docker socket to the Fluent container to access the logs of each container. On the other hand, we provide a logging driver for each container to send logs to Fluent.
+
+The Fluentd logging driver sends the container logs as structured log data to the Fluentd collector. In addition to the actual log message, metadata such as ``container_id``, ``container_name``, and ``source`` are also sent in the structured log message.
+
+The following example sets the log driver to fluentd and sets the fluentd-address and tag option.
+
+By default, Docker uses the first 12 characters of the container ID to tag protocol messages. By setting the tag option, this id is overwritten with the string used.
+
+More information about the available logging drivers can be found in the official [documentation][17].
+
+```yml
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: infra
+```
+
+#### Config-files for Fluentd
+The configuration file for Fluentd allows to control the input and output behavior by selecting input and output plugins and setting plugin parameters. The file is required for Fluentd to operate properly.
+
+It consists of seven directives, not all of which must always be present in a configuration file. For example, in our example we use four of the seven directives:
+  * `source` determine the input sources
+  * `match`  determine the output destinations
+  * `filter` determine the event processing pipelines
+  * `label` group the output and filter for internal routing
+
+The ``source`` plugin defines where all data comes from. 
+Fluentd's default input plugins include http and forward. Http provides an HTTP endpoint, while forward provides a TCP endpoint. With the container driver used, the TCP endpoint is required. This is set on port 24224, which is also exposed in the docker-compose configuration.
+
+```xml
+<source>
+  @type forward
+  bind 0.0.0.0
+  port 24224
+</source>
+```
+As previously described in the section [Docker-Compose File for Fluentd](#docker-compose-file-for-fluentd), the docker driver sends metadata such as the container name to Fluent in addition to the logs. This value can be taken from the record using a ``Filters`` directive and the Fluentd default plugin ``record_transformer`` and stored as a local variable. In this example the three variables ``tag_name``, ``container`` and ``stream`` are created. In the match directive they can be accessed when setting the label.
+
+```xml
+<filter **>
+  @type record_transformer
+  <record>
+    tag_name ${tag}
+    container ${record["container_name"]}
+    stream ${record["source"]}
+  </record>
+</filter>
+```
+
+
+The ``match`` plugin tells fluentd what to do with the data.
+The match directive looks for logs with matching tags and processes them. Since the most common use of the match directive is to forward logs to other systems, plugins that match the match directive are called output plugins.
+
+Grafana Loki has a Fluentd output plugin called fluent-plugin-grafana-loki that allows logs to be sent to a private Loki instance or Grafana Cloud. To use this plugin, it must be [installed][22] in the container. In this example, however, this step is skipped. A [preconfigured container image][23] from Grafana is used.
+
+Each match directive must contain a match pattern and a @type parameter. The @type parameter specifies the output plugin to use. In the present Fluentd configuration, we use @type loki. Only events with a tag that matches the pattern are sent to the output destination. In this example, a wildcard pattern is used. Any events that have not yet been processed are sent to loki.
+
+```xml
+<match **>
+  @type loki
+  url "http://loki:3100"
+  flush_interval 1s
+  flush_at_shutdown true
+  buffer_chunk_limit 1m
+  <label>
+    tag_name
+    container
+    stream
+  </label>
+</match>
+```
+
+``** matches zero or more tag parts - a.** matches a, a.b and a.b.c``
+
+In order to be able to search and filter for logs later in Grafana, labels can be added.
+
+This is possible by using either ``<label>...</label>`` or ``extra_labels`` to set at least one label. By means of ``extra_labels`` static labels can be assigned. 
+
+As in the case of the Fluentd system Logs. These are all given the label ` agent` with the value `fluentd-master`.
+
+````xml
+<label @FLUENT_LOG>
+  <match fluent.{warn,error,fatal}>
+    @type loki
+    url "http://loki:3100"
+    flush_interval 1s
+    flush_at_shutdown true
+    buffer_chunk_limit 1m
+    extra_labels {"agent":"fluentd-master"}
+  </match>
+</label>
+````
+
+Dynamic labels can be set at runtime with ``<label>...</label>``. This way e.g. the container name can be assigned individually as a tag for each event. Here the previously created variable ``container`` is used.
+
+```xml
+<match **>
+    ...
+  <label>
+    tag_name
+    container
+    stream
+  </label>
+</match>
+```
+
+As mentioned in the [How to aggregate logs](##How to aggregate logs) section under Fluentd, there are quite a few different plugins that can be used for example to parse events. The @type parameter of the <parse> section specifies the type of parser plugin. In this example, the built-in parser [nginx][24] is used.
+
+```xml
+<filter app>
+  @type parser
+  key_name log
+  reserve_data true
+  <parse>
+    @type nginx
+  </parse>
+</filter>
+```
+The nginx parser plugin parses the standard nginx logs using a regex. As described in the [logfmt](#logfmt) section, the parsed key value pairs can be accessed in Grafana. The use of a Loki pattern parser or a regex is then no longer necessary for later querying, as with the promtaillogs.
+
+Hint: In Promtail, too, the logs can be piped into the desired form in advance. Fluentd, however, comes with a ready-made plugin.
+
+For more information Fluentd and its configuration, see the official [documentation][21].
+
+#### Setup Loki as data source in Grafana
+Since the configuration here does not differ from that in the Loki with Promtail example, I refer at this point to the previously described configuration. See section [Setup Loki as data source in Grafana](#setup-loki-as-data-source-in-grafana).
+
+#### Analyze the data that is available in the Loki data source
+
+Once you have everything prepared, you can start the services.
+
+``docker-compose up -d``
+
+Then navigate to grafana at http://localhost:3000 and select "explore" on the left.
+Select Loki as the database and select the container you are interested in.
+As an example, the query `{container="/grafana"} |= ` can be used.
+
+The data can also be viewed in the dashboard provided.
+The configuration as well as the dashboard for this can be found in the folder [Dashboards](./loki-fluent-example/grafana/provisioning/dashboards/). To display the dashboard in Grafana,
+open the Dashboards tab on the left and select the "Fleuntd" dashboard.
+
+
+------------------------------------
 [1]: https://grafana.com/docs/loki/latest/
 [2]: https://blog.mi.hdm-stuttgart.de/index.php/2022/03/13/logging-im-grosen-masstab-mit-grafana-loki/
 [3]: https://grafana.com/docs/loki/latest/fundamentals/architecture/deployment-modes/
@@ -317,3 +484,11 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 [14]: https://grafana.com/docs/loki/latest/logql/
 [15]: https://grafana.com/blog/2020/04/21/how-labels-in-loki-can-make-log-queries-faster-and-easier/#what-is-a-label?
 [16]: https://grafana.com/blog/2021/08/09/new-in-loki-2.3-logql-pattern-parser-makes-it-easier-to-extract-data-from-unstructured-logs/
+[17]: https://docs.docker.com/config/containers/logging/fluentd/
+[18]: https://docs.docker.com/compose/install/
+[19]: https://docs.docker.com/get-docker/
+[20]: https://docs.docker.com/compose/compose-file/compose-versioning/
+[21]: https://docs.fluentd.org/configuration
+[22]: https://grafana.com/docs/loki/latest/clients/fluentd/
+[23]: https://hub.docker.com/r/grafana/fluent-plugin-loki
+[24]: https://docs.fluentd.org/parser/nginx

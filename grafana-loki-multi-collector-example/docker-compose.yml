@@ -42,9 +42,6 @@ services:
       - type: bind
         source: ./fluentd/config/fluent.conf
         target: /fluentd/etc/fluent.conf
-      - type: bind
-        source: /var/lib/docker/containers
-        target: /fluentd/log/containers
 
   promtail:
     container_name: promtail

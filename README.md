@@ -116,6 +116,15 @@ scrape_configs:
 
 The configuration `job=syslog` will tail one file and assign one label. It could be queried with `{job=”syslog”}`.
 
+#### logfmt
+The logfmt parser can be added using the `| logfmt` and will extract all keys and values from the logfmt formatted log line. Keys from detected fields can then be used like labels. An example query of the sum of all http status codes of the last minute could look like this.
+
+```yml
+sum by(code) (count_over_time({container="/nginx-app"} | logfmt | remote != ``[1m]))
+```
+
+<img src="image/nginx_log_output.jpg" alt="nginx log output with detected fields" width="400">
+
 #### Loki Pattern Parser
 Since Loki v2.3.0 it is possible to dynamically create new labels at query time by using a pattern parser in the LogQL query.
 

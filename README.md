@@ -166,7 +166,7 @@ More detailed documentation about the pattern parser can be found at the followi
 
 ## Grafana Loki 
 
-<img src="image/Grafana_Loki.jpg" alt="Grafana Loki Promtail setup" width="200">
+<img src="image/Grafana_Loki.jpg" alt="Grafana Loki Promtail setup" width="400">
 
 ### Deployment modes
 There are three different ways to roll out Loki. To learn more about the different modes, please read the [official documentation][2].
@@ -445,11 +445,14 @@ As mentioned in the [How to aggregate logs](##How to aggregate logs) section und
 ```
 The nginx parser plugin parses the standard nginx logs using a regex. As described in the [logfmt](#logfmt) section, the parsed key value pairs can be accessed in Grafana. The use of a Loki pattern parser or a regex is then no longer necessary for later querying, as with the promtaillogs.
 
+<img src="image/nginx_log_output.jpg" alt="nginx log output with detected fields" width="400">
+
 Hint: In Promtail, too, the logs can be piped into the desired form in advance. Fluentd, however, comes with a ready-made plugin.
 
 For more information Fluentd and its configuration, see the official [documentation][21].
 
 #### Setup Loki as data source in Grafana
+
 Since the configuration here does not differ from that in the Loki with Promtail example, I refer at this point to the previously described configuration. See section [Setup Loki as data source in Grafana](#setup-loki-as-data-source-in-grafana).
 
 #### Analyze the data that is available in the Loki data source
@@ -465,6 +468,26 @@ As an example, the query `{container="/grafana"} |= ` can be used.
 The data can also be viewed in the dashboard provided.
 The configuration as well as the dashboard for this can be found in the folder [Dashboards](./loki-fluent-example/grafana/provisioning/dashboards/). To display the dashboard in Grafana,
 open the Dashboards tab on the left and select the "Fleuntd" dashboard.
+
+
+
+
+
+------------------------------------
+## Elastic Stack 
+
+<img src="image/Elastic Stack pipeline.jpg" alt="Grafana Loki Promtail setup" width="400">
+
+Before installing, make sure that the following ports are free: 5601 (for Kibana), 9200 (for Elasticsearch), and 5044 (for Logstash).
+
+Also, make sure that the vm_max_map_count kernel setting is set to at least 262144:
+
+sudo sysctl -w vm.max_map_count=262144
+
+### ELK - Elasticsearch, Logstash, Kibana
+
+### EFK - Elasticsearch, Fluentd, Kibana
+
 
 
 ------------------------------------

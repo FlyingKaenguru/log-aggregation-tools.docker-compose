@@ -193,12 +193,12 @@ This includes, for example, the image to be used, the ports to be exposed, and v
 The Docker socket, which is needed to witness Docker events, is mounted in the Promtail service under volume.
 Since we have a filter built into the Promtail config (see next section), which is configured to only collect containers with the Docker label `logging=promtail` for logging and send them to Grafana Loki,
 this label must be defined in the individual services.
-The label "job" can later be used to distinguish between "management" and "app" applications.
+The label "job" can later be used to distinguish between "infra" and "app" applications.
 
 ```yml
     labels:
       logging: "promtail"
-      job: "management"
+      job: "infra"
 ```
 
 #### Config-files for Promtail
@@ -283,8 +283,8 @@ open the Dashboards tab on the left and select the "Promtail" dashboard.
 
 #### Read in data from a test app
 In the app-promtail folder you will find another [Docker-compose](loki-promtail-example/app/nginx-example.yaml) file. 
-This creates an nginx app. As already in the Management Services, the Promtail labels are assigned here as well. 
-Since this is an application outside the management level, we enter "App" for the job. 
+This creates an nginx app. As with the infrastructure services (Grafana and Loki), the Promtail labels are assigned here as well. 
+Since this is an application outside the infrastructure level, we enter "App" for the job. 
 This helps us to distinguish the applications later.
 
 ````yml
@@ -469,6 +469,40 @@ The data can also be viewed in the dashboard provided.
 The configuration as well as the dashboard for this can be found in the folder [Dashboards](./loki-fluent-example/grafana/provisioning/dashboards/). To display the dashboard in Grafana,
 open the Dashboards tab on the left and select the "Fleuntd" dashboard.
 
+#### Read in data from a test app
+In the app folder you will find another [Docker-compose](loki-fluent-example/app/nginx-example.yaml) file.
+This creates an nginx app. As with the infrastructure services (Grafana and Loki), we add the Docker driver here as well. However, we change the tag to `App`. This helps us to distinguish the applications later.
+
+````yml
+services:
+  nginx-app:
+    container_name: nginx-app
+    image: nginx
+    ports:
+      - 8080:80
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: app
+````
+Start with:
+``docker-compose -f nginx-example.yaml up -d``
+
+The Apache HTTP server benchmarking tool "[ApacheBench][13]" can be used to generate an arbitrary number of queries.
+
+ApacheBench is a command line tool included in the apache2-utils package. In addition to the number of queries to send, a timeout limit can be configured for the query header. ab sends the queries, waits for a response (until a user-specified timeout), and prints statistics as a report.
+
+The following command, should generate 100 logs in the nginx-app container in the stderr stream.
+
+````ab -n 100 -c 100 http://{Server}:8080/errortest````
+
+<img src="image/nginx-error-dashboard.jpg" width="600">
+After the command is executed, 100 entries are visible in the stderr stream in the dashboard.
+
+**TODO**: There do not appear 100 entries
+
+<img src="image/promtail-fluent-dashboard-data%20difference.png" alt="Data difference" width="400">
 
 
 

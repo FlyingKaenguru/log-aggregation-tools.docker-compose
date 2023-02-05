@@ -512,15 +512,25 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 
 <img src="image/Elastic Stack pipeline.jpg" alt="Grafana Loki Promtail setup" width="400">
 
-Before installing, make sure that the following ports are free: 5601 (for Kibana), 9200 (for Elasticsearch), and 5044 (for Logstash).
+* Before installing, make sure that the following ports are free: 5601 (for Kibana), 9200 (for Elasticsearch), and 5044 (for Logstash).
 
-Also, make sure that the vm_max_map_count kernel setting is set to at least 262144:
+* Also, make sure that the vm_max_map_count kernel setting is set to at least 262144
+  * If Elasticsearch is used in a Docker container, the virtual memory should be increased. By default, Elasticsearch uses an mmapfs directory to store its indexes. The operating system's default limits on mmap count are often too low, which can lead to out of memory exceptions. 
+    
+  [Documentation][25]
 
-sudo sysctl -w vm.max_map_count=262144
+  On Linux, the limits can be increased with the following command as root:
 
-### ELK - Elasticsearch, Logstash, Kibana
+  ``sudo sysctl -w vm.max_map_count=262144``
 
 ### EFK - Elasticsearch, Fluentd, Kibana
+**Approach**
+* Create docker container forElasticsearch, Fluentd, Kibana using Docker compose
+* Create a config and Dockerfile for Fleuntd
+* Analyze the data that available in the Loki data source
+
+
+### ELK - Elasticsearch, Logstash, Kibana
 
 
 
@@ -549,3 +559,4 @@ sudo sysctl -w vm.max_map_count=262144
 [22]: https://grafana.com/docs/loki/latest/clients/fluentd/
 [23]: https://hub.docker.com/r/grafana/fluent-plugin-loki
 [24]: https://docs.fluentd.org/parser/nginx
+[25]: https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html

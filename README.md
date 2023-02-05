@@ -186,7 +186,7 @@ Here, all microservice components of Loki are run within a single process as a s
 * Setup Loki as data source in Grafana
 * Analyze the data that available in the Loki data source
 
-#### Docker-Compose File
+#### Docker-Compose File for PLG
 
 The [docker-compose.yml](loki-promtail-example/docker-compose.yml) file defines the individual services (Loki, Promtail and Grafana).
 This includes, for example, the image to be used, the ports to be exposed, and volumes needed to be mounted.
@@ -320,7 +320,7 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 * Setup Loki as data source in Grafana
 * Analyze the data that available in the Loki data source
 
-#### Docker-Compose File for Fluentd
+#### Docker-Compose File for FLG
 
 The [docker-compose.yml](loki-fluent-example/docker-compose.yml) file defines the individual services (Loki, Fluentd and Grafana).
 This includes, for example, the image to be used, the ports to be exposed, and volumes needed to be mounted.
@@ -342,7 +342,7 @@ More information about the available logging drivers can be found in the officia
         tag: infra
 ```
 
-#### Config-files for Fluentd
+#### Prepare configuration file for Fluentd in the FLG stack
 The configuration file for Fluentd allows to control the input and output behavior by selecting input and output plugins and setting plugin parameters. The file is required for Fluentd to operate properly.
 
 It consists of seven directives, not all of which must always be present in a configuration file. For example, in our example we use four of the seven directives:
@@ -525,10 +525,61 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 
 ### EFK - Elasticsearch, Fluentd, Kibana
 **Approach**
-* Create docker container forElasticsearch, Fluentd, Kibana using Docker compose
-* Create a config and Dockerfile for Fleuntd
-* Analyze the data that available in the Loki data source
+* Prepare docker container for Elasticsearch, Fluentd and Kibana using Docker compose
+* Create a Fleuntd config and Dockerfile
+* Analyze the data that is available
 
+#### Prepare docker-compose.yml for EFK
+Docker Compose is a tool for defining and running multi-container Docker applications.
+
+The [docker-compose.yml](efk-example/docker-compose.yml) file defines the individual services (Elasticsearch, Fluentd, Kibana).
+This includes, for example, the image to be used, the ports to be exposed, and volumes needed to be mounted.
+As before when creating the [docker-compose.yml for FLG](#docker-Compose-file-for-FLG), we provide a logging driver for each container to send logs to Fluent.
+
+The Fluentd logging driver sends the container logs as structured log data to the Fluentd collector. In addition to the actual log message, metadata such as ``container_id``, ``container_name``, and ``source`` are also sent in the structured log message.
+
+The following example sets the log driver to fluentd and sets the fluentd-address and tag option.
+
+By default, Docker uses the first 12 characters of the container ID to tag protocol messages. By setting the tag option, this id is overwritten with the string used.
+
+More information about the available logging drivers can be found in the official [documentation][17].
+
+```yml
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: infra
+```
+
+#### Prepare a Fleuntd config and Dockerfile
+To be able to send log events from Fluentd to Elasticsearch, an output plugin must be added to the Fluent container. Here we use the `fluent-plugin-elasticsearch`. Using the [dockerfile](efk-example/fluentd/Dockerfile) we create our own image based on the official Docker image and additionally install the Elasticsearch plugin. When Docker-compose.yml is called, the new image is built using the `build` command.
+
+````yml
+  fluentd:
+    container_name: fluentd
+    build: ./fluentd
+    ...
+````
+
+As before in FLG, Fluentd needs a configuration to know which events are allowed to be accepted, processed and propagated.
+
+The individual directives like ``source`` and ``match`` are described in more detail in the section [Prepare configuration file for Fluentd in the FLG stack](#prepare-configuration-file-for-fluentd-in-the-fLG-stack). In contrast to the FLG stack, the `match` directive uses the Elasticsearch plugin.
+
+````xml
+<match *.**>
+    @type elasticsearch
+    host elasticsearch
+    port 9200
+    logstash_format true
+    logstash_prefix fluentd
+    logstash_dateformat %Y%m%d
+    include_tag_key true
+    type_name access_log
+    tag_key @log_name
+    flush_interval 1s
+</match>
+````
 
 ### ELK - Elasticsearch, Logstash, Kibana
 

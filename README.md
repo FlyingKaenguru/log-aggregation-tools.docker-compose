@@ -523,6 +523,19 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 
   ``sudo sysctl -w vm.max_map_count=262144``
 
+* Disable paid features in Elasticsearch
+  * Switch the value of Elasticsearch's ``xpack.license.self_generated.type`` setting from ``trial`` to ``basic``. The easiest way to achieve this is to pass the following environment variables to the container in the Docker-compose file.
+
+  ```yml
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.0
+    environment:
+      discovery.type: single-node
+      xpack.license.self_generated.type: basic
+      xpack.security.enabled: false
+    ...
+  ```
+
 ### EFK - Elasticsearch, Fluentd, Kibana
 **Approach**
 * Prepare docker container for Elasticsearch, Fluentd and Kibana using Docker compose

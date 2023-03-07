@@ -271,7 +271,7 @@ Once you have everything prepared, you can start the services.
 
 ``docker-compose up -d``
 
-Then navigate to grafana at http://localhost:3000 and select "explore" on the left. 
+Then navigate to grafana at ``http://localhost:3000`` and select "explore" on the left. 
 Select Loki as the database and select the container you are interested in. 
 Run the query and you will see the logs at the bottom.
 
@@ -593,6 +593,81 @@ The individual directives like ``source`` and ``match`` are described in more de
     flush_interval 1s
 </match>
 ````
+
+#### Analyze the data that is available in Elasticsearch
+
+Once you have everything prepared, you can start the services. To do this, navigate to the [efk-example](efk-example/) folder and execute the following Docker commands.
+
+``docker-compose up -d`` and ``  docker-compose -f /app/nginx-example.yaml up -d``
+
+Alternatively you can also use the [run](efk-example/run.sh) file which calls both Docker compose files. ``./run.sh``
+
+The startup of the containers may take a moment.
+
+Elasticsearch is available on port ``9200``. If you send a searchquarry with ``fluentd-*`` as index you get a result similar to the following output. http://localhost:9200/fluentd-*/_search
+
+<img src="image/elasticsearch_index_fluentd.jpg" width="600">
+
+In Elasticsearch, indexes are a way to store, organize, and access data. An index in Elasticsearch is similar to a database in traditional relational database systems. An Elasticsearch cluster can contain multiple Indices (databases), which in turn contain multiple Types (tables). These types hold multiple Documents (rows), and each document has Properties(columns).
+
+MySQL => Databases => Tables => Columns/Rows
+
+Elasticsearch => Indices => Types => Documents with Properties
+
+The following format is used for searching and querying in Elasticsearch: http://localhost:9200/[index]/[type]/[operation]
+
+Example queries:
+
+* http://localhost:9200/fluentd-20230307/_search?q=container_name:\/elasticsearch%E2%80%9D
+* http://localhost:9200/fluentd-20230307/_search?q=@log_name:infra%E2%80%9D
+
+A standard logging format is to assign a new index for each day. Your list of indices may look like this:
+
+* fluentd-20230307
+* fluentd-20230308
+* fluentd-20230309
+
+Elasticsearch allows you to query multiple indices at the same time, so it isn't a problem to do:
+
+http://localhost:9200/fluentd-20230307,fluentd-20230308/_search
+
+
+------------------
+
+The logs can also be visualized in Kibana, which is accessible via port ``5601``. http://localhost:5601
+
+ However, Kibana must first be configured when it is called for the first time. For this we create a data view. Click on ``Discover`` in the menu and then on the button ``Create data view``.
+Give the view a name, which can be freely chosen, and enter ``fluentd-*`` under index pattern. To match multiple indexes, we use a wildcard (*).  This way logs of several days are displayed. Finally, click ``Create index pattern``.
+
+<img src="image/Kibana_index.jpg" width="600">
+
+Kibana is now configured to use the Elasticsearch data. 
+
+<img src="image/Kibana_discover.jpg" width="600">
+
+______________
+
+The Apache HTTP server benchmarking tool "[ApacheBench][13]" can be used to generate an arbitrary number of queries.
+
+ApacheBench is a command line tool included in the apache2-utils package. In addition to the number of queries to send, a timeout limit can be configured for the query header. ab sends the queries, waits for a response (until a user-specified timeout), and prints statistics as a report.
+
+The following command, should generate 100 logs in the nginx-app container in the stderr stream.
+
+````ab -n 100 -c 100 http://{Server}:8080/errortest````
+
+We can view these logs by filtering the log data in Kibana by:
+* @log_name.keyword = app
+* source.keyword = stderr
+* ```{
+  "query": {
+    "wildcard": {
+      "log.keyword": "*/errortes*"
+      }
+    }
+  } ```
+
+<img src="image/Kibana_Fluentd_AppacheBenchmark.jpg" width="600">
+
 
 ### ELK - Elasticsearch, Logstash, Kibana
 

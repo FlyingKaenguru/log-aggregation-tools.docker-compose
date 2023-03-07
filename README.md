@@ -503,7 +503,7 @@ The following command, should generate 100 logs in the nginx-app container in th
 
 After the command is executed, 100 entries are visible in the stderr stream in the dashboard.
 
-**TODO**: There do not appear 100 entries
+**TODO**: There do not appear 100 entries - see Issue https://github.com/schwabsh/log-aggregation-tools.docker-compose/issues/1
 
 <img src="image/promtail-fluent-dashboard-data%20difference.png" alt="Data difference" width="400">
 

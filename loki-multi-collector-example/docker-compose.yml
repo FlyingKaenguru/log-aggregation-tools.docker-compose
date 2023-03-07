@@ -24,16 +24,7 @@ services:
 
   fluentd:
     container_name: fluentd
-    image: grafana/fluent-plugin-loki:master
-    command:
-      - "fluentd"
-      - "-v"
-      - "-p"
-      - "/fluentd/plugins"
-    environment:
-      LOKI_URL: http://loki:3100
-    deploy:
-      mode: global
+    build: ./fluentd
     networks:
       - network
     ports:

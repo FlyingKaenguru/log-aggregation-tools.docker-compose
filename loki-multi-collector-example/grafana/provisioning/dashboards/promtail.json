@@ -196,12 +196,12 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "sum(count_over_time({job=\"management\"} |= `` [$__interval]))",
+          "expr": "sum(count_over_time({job=\"infra\"} |= `` [$__interval]))",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Total  Count of logs - management",
+      "title": "Total  Count of logs - infra",
       "type": "stat"
     },
     {

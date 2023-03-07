@@ -180,6 +180,8 @@ Here, all microservice components of Loki are run within a single process as a s
 
 ### Grafana Loki with Promtail
 
+* Before installing, make sure that the following ports are free: 49154 (for Loki), 3000 (for Grafana), 9080 (Promtail) and 8080 (nginx).
+
 **Approach**
 * Create docker container for Loki, Promtail and Grafana using Docker compose
 * Create a config file for Promtail
@@ -313,6 +315,8 @@ The following command, should generate 100 logs in the nginx-app container in th
 After the command is executed, 100 entries are visible in the stderr stream in the dashboard.
 
 ### Grafana Loki with Fluentd
+
+* Before installing, make sure that the following ports are free: 49154 (for Loki), 3000 (for Grafana), 24224 (for Fluentd) and 8080 (nginx).
 
 **Approach**
 * Create docker container for Loki, Fluentd and Grafana using Docker compose
@@ -497,7 +501,6 @@ The following command, should generate 100 logs in the nginx-app container in th
 
 ````ab -n 100 -c 100 http://{Server}:8080/errortest````
 
-<img src="image/nginx-error-dashboard.jpg" width="600">
 After the command is executed, 100 entries are visible in the stderr stream in the dashboard.
 
 **TODO**: There do not appear 100 entries
@@ -512,9 +515,7 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 
 <img src="image/Elastic Stack pipeline.jpg" alt="Grafana Loki Promtail setup" width="400">
 
-* Before installing, make sure that the following ports are free: 5601 (for Kibana), 9200 (for Elasticsearch), and 5044 (for Logstash).
-
-* Also, make sure that the vm_max_map_count kernel setting is set to at least 262144
+* Before installing, make sure that the vm_max_map_count kernel setting is set to at least 262144
   * If Elasticsearch is used in a Docker container, the virtual memory should be increased. By default, Elasticsearch uses an mmapfs directory to store its indexes. The operating system's default limits on mmap count are often too low, which can lead to out of memory exceptions. 
     
   [Documentation][25]
@@ -537,6 +538,9 @@ After the command is executed, 100 entries are visible in the stderr stream in t
   ```
 
 ### EFK - Elasticsearch, Fluentd, Kibana
+
+* Before installing, make sure that the following ports are free: 5601 (for Kibana), 9200 (for Elasticsearch), 24224 (Fluentd) and 8080 (nginx).
+
 **Approach**
 * Prepare docker container for Elasticsearch, Fluentd and Kibana using Docker compose
 * Create a Fleuntd config and Dockerfile
@@ -671,6 +675,7 @@ We can view these logs by filtering the log data in Kibana by:
 
 ### ELK - Elasticsearch, Logstash, Kibana
 
+* Before installing, make sure that the following ports are free: 5601 (for Kibana), 9200 (for Elasticsearch), 5044 (Logstash) and 8080 (nginx).
 
 
 ------------------------------------

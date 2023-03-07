@@ -23,8 +23,8 @@ services:
       - "9200"
     ports:
       - "9200:9200"
-    volumes:
-      - esdata01:/usr/share/elasticsearch/data
+#    volumes:
+#      - esdata01:/usr/share/elasticsearch/data
     networks:
       - network
     logging:
@@ -38,8 +38,8 @@ services:
     container_name: kibana
     ports:
       - "5601:5601"
-    volumes:
-      - kibanadata:/usr/share/kibana/data
+#    volumes:
+#      - kibanadata:/usr/share/kibana/data
     networks:
       - network
     logging:
@@ -48,19 +48,19 @@ services:
         fluentd-address: localhost:24224
         tag: infra
 
-volumes:
-  esdata01:
-      driver: local
-      driver_opts:
-        type: none
-        device: /data/elastic
-        o: bind
-  kibanadata:
-      driver: local
-      driver_opts:
-        type: none
-        device: /data/kibana
-        o: bind
+#volumes:
+#  esdata01:
+#      driver: local
+#      driver_opts:
+#        type: none
+#        device: /data/elastic
+#        o: bind
+#  kibanadata:
+#      driver: local
+#      driver_opts:
+#        type: none
+#        device: /data/kibana
+#        o: bind
 
 networks:
   network:

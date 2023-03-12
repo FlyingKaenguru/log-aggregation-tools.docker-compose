@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  nginx-app:
+    container_name: nginx-app
+    image: nginx
+    ports:
+      - 8080:80
+    labels:
+      logging: "logstash"
+      job: "app"
+
+networks:
+  external:
+    name: logging-example

@@ -28,6 +28,7 @@ Elastic Stack as well as Grafana Loki, the requirements are limited to:
 * Completeness: all logs are completely collected and displayed.
 * Query language is user-friendly: the Querry language is intuitive and easy to use.
 * Intuitive: The visualization tool (Grafana, Kibana) is intuitive and easy to use.
+* Documentation: Detailed and comprehensible documentation is available.
 
 Requirements such as scalability, reliability, performance, security and cost-effectiveness do not matter.
 
@@ -206,7 +207,7 @@ requirements may look like the following:
       "must": [
         {
           "match": {
-            "tag": "myapp"
+            "tag": "infra"
           }
         }
       ]
@@ -392,6 +393,40 @@ The following command, should generate 100 logs in the nginx-app container in th
 
 <img src="image/nginx-error-dashboard.jpg" width="600">
 After the command is executed, 100 entries are visible in the stderr stream in the dashboard.
+
+#### Evaluation
+
+The review of the requirements is based on the previously
+defined [Requirements for the logging technology stack](#Requirements for the logging technology stack). The ratings in
+the table were made on a scale of 1 to 5, with 5 being the highest rating.
+
+| Criteria                       | Rating (1-5) |
+|--------------------------------|:------------:|
+| Free of charge                 | 5            |
+| User-friendly technology stack | 4            |
+| Roll out with Docker Compose   | 5            |
+| Completeness                   | 5            |
+| Query language is user-friendly| 5            |
+| Intuitive visualization tool   | 4            |
+| Documentation                  | 5            |
+
+The three tools Promtail, Grafana and Loki are open source and can therefore be used free of charge. The configuration
+of the technology stack is particularly easy, requiring only a promtail configuration. However, the yaml format is not
+intuitive for every developer due to indentations. To save time, when configuring Grafana, additional yaml files can be
+used to include certain tasks, such as configuring the database (Loki) and using dashboards, at launch. Rolling out the
+tools using Docker Compose is also straightforward.
+
+Logs generated using the ApacheBench tool could be fully displayed in Grafana. The LogQL query language is very
+intuitive and well documented. Using regex and parsers, the logs can be searched without any problems. Creating a
+dashboard in Grafana is also very easy and intuitively designed. Created dashboards can be easily exported and imported.
+Imported dashboards from the community can help with understanding and using panels. However, it would be desirable that
+when creating dashboards, new panels do not always appear at the top left, as this shifts the other panels and the
+layout needs to be adjusted each time.
+
+The documentation for all tools is very good and there is also a large community that is happy to help with questions
+and offers free tutorials, e.g. in the form of YouTube videos.
+
+----------------------------------------------------
 
 ### Grafana Loki with Fluentd (FGL)
 
@@ -628,8 +663,44 @@ Issue https://github.com/schwabsh/log-aggregation-tools.docker-compose/issues/1
 
 <img src="image/promtail-fluent-dashboard-data%20difference.png" alt="Data difference" width="400">
 
+#### Evaluation
 
+The review of the requirements is based on the previously
+defined [Requirements for the logging technology stack](#Requirements for the logging technology stack). The ratings in
+the table were made on a scale of 1 to 5, with 5 being the highest rating.
 
+| Criteria                       | Rating (1-5) |
+|--------------------------------|:------------:|
+| Free of charge                 | 5            |
+| User-friendly technology stack | 3            |
+| Roll out with Docker Compose   | 5            |
+| Completeness                   | 1            |
+| Query language is user-friendly| 5            |
+| Intuitive visualization tool   | 4            |
+| Documentation                  | 3            |
+
+Fluentd, Grafana and Loki are three open source tools that can be used for logging and monitoring applications. The
+technology stack is relatively easy to configure, requiring only a fluentd configuration. However, it should be noted
+that the configuration is in config format and the concepts of fluentd must be understood in order to work successfully
+with the tool. Copying code blocks usually does not lead to success. For example, long debugging sessions can occur if
+concepts and functionality are not fully understood. The large selection of plugins is on the one hand an advantage, but
+can certainly lead to excessive demands, since the plugins are partly poorly documented.
+
+Grafana can be pre-configured using YAML files to pass along recurring tasks such as database (Loki) configuration and
+dashboards to use at container launch. Rolling out using Docker Compose is straightforward.
+
+The logs generated with the ApacheBench tool could not be fully displayed in Grafana.
+This [issue](https://github.com/schwabsh/log-aggregation-tools.docker-compose/issues/1) is still open and could not be
+solved yet despite longer debugging.
+
+The query language LogQL is intuitive and well documented. With the help of regex and parsers the logs can be searched
+without problems. Creating a dashboard in Grafana is simple and intuitive. The dashboards created can be easily exported
+and imported, which is quite useful. Imported dashboards from the community can help with understanding and using
+panels. However, it would be desirable that new panels do not always appear at the top left when creating the dashboard,
+as this causes the other panels to move each time and the layout needs to be adjusted.
+
+The documentation for all the tools is very good, but there can be some confusion with the plugins. However, there is a
+large community that helps with questions and offers free tutorials, for example in the form of YouTube videos.
 
 ------------------------------------
 

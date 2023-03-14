@@ -833,6 +833,31 @@ We can view these logs by filtering the log data in Kibana by:
 
 <img src="image/Kibana_Fluentd_AppacheBenchmark.jpg" width="600">
 
+# Conclusion:
+
+In summary, all three technology stacks are free, easy to configure, and can be deployed quickly and easily with Docker
+Compose.
+
+The visualization tools (Grafana and Kibana) are also very user-friendly and intuitively designed. There are many
+pre-built dashboards and widgets that can be easily customized and used. The user interface is clean and easy to
+navigate, making it easy for developers to quickly analyze and visualize their data.
+
+The query languages used in the aforementioned technology stacks are relatively easy to understand and use.
+Elasticsearch uses the Elasticsearch Query DSL query language in Efk, while Loki and Grafana use their own query
+language called LogQL. While both query languages are relatively easy to understand and use, they have differences in
+syntax and available features.
+
+In terms of documentation, I have found that Fluentd's documentation can be a bit confusing in some places. This may be
+because there are many configuration options and the documentation may not always be up to date. So it can sometimes be
+a bit difficult to find the right information, especially if you're not that familiar with the subject matter.
+
+Overall, all three technology stacks are very good options for logging and monitoring applications and systems. They
+offer a variety of features and configuration options to effectively collect, store and analyze data. They have an
+active community that can answer questions and solve problems.
+
+Ultimately, the choice of technology stack depends on specific requirements and preferences, but overall, all three
+technology stacks are very solid options for logging and monitoring.
+
 ------------------------------------
 
 [1]: https://grafana.com/docs/loki/latest/

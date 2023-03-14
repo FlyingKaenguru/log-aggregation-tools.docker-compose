@@ -858,6 +858,29 @@ active community that can answer questions and solve problems.
 Ultimately, the choice of technology stack depends on specific requirements and preferences, but overall, all three
 technology stacks are very solid options for logging and monitoring.
 
+# Outlook
+
+Exposure to technologies such as Promtail, Loki, Grafana, Elasticsearch, Fluentd, and Kibana provides an opportunity to
+dive deeper into the world of logging and monitoring applications and systems. Not only can knowledge be gained about
+how these tools work, but also about the underlying concepts such as Big Data, data analytics, DevOps and cloud
+infrastructure.
+
+Through exposure to these technology stacks, developers can develop a better understanding of how to collect and analyze
+logs in order to identify and fix them. They can also learn how to create dashboards and visualizations to monitor
+important metrics and trends Monitor.
+
+After learning about the aforementioned technology stacks, there are several ways to further expand one's knowledge. One
+option could be to explore another technology stack such as ELK (Elasticsearch, Logstash, and Kibana).
+
+Another possible step is to delve into cloud infrastructures, as many of the technology stacks are developed for use in
+the cloud. Therefore, working with them can also improve one's skills in using cloud infrastructure.
+
+Also, getting to grips with cloud infrastructures could be another step, as many of the technology stacks have been
+developed for use in the cloud, working with them can also improve one's skills in dealing with cloud infrastructure.
+
+One point left open in the paper is to fully address the lack of Nginx logs when using the FGL stack (Fluentd, Grafana,
+Loki) see Issue https://github.com/schwabsh/log-aggregation-tools.docker-compose/issues/1.
+
 ------------------------------------
 
 [1]: https://grafana.com/docs/loki/latest/

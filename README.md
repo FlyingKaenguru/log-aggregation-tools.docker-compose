@@ -88,13 +88,20 @@ fluentd collector.
 
 ## Data visualization tools
 
-Grafana and Kibana are two popular open source tools that help users visualize and understand trends within vast amounts
-of log data
+Grafana and Kibana are two open source data visualization tools used for monitoring, analyzing and visualizing large
+data sets. Both tools are widely used in log management, metrics monitoring, and data analysis.
 
-* **Grafana:** Grafana is a visualizing tool which supports Loki as a data source
+**Grafana** is an easy-to-use platform that provides users with the ability to visualize and analyze data from various
+sources such as databases, APIs, and even IoT devices. It supports a wide range of data sources, including
+Elasticsearch, Prometheus, InfluxDB, Graphite and more. Grafana has a user-friendly interface that allows users to
+create and customize dashboards with different visualization types, such as graphs, charts and tables. It also has an
+extensive library of plugins and extensions that allow users to extend its functionality.
 
-* **[Kibana:][8]** Kibana is the visualization engine for elasticsearch data, with features like time-series analysis,
-  machine learning, graph and location analysis.
+**Kibana**, on the other hand, is a part of the Elasticsearch stack and is designed to work seamlessly with
+Elasticsearch. It is a data exploration and visualization tool that allows users to search, analyze and visualize data
+stored in Elasticsearch indexes. Kibana provides a web-based interface that allows users to create and customize
+interactive visualizations and dashboards with real-time data. It supports a wide range of data types, including text,
+numeric, geospatial and time series data.
 
 ## Query Languages
 

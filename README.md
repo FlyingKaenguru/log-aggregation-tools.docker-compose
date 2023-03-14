@@ -630,6 +630,8 @@ Issue https://github.com/schwabsh/log-aggregation-tools.docker-compose/issues/1
 
 <img src="image/Elastic Stack pipeline.jpg" alt="Grafana Loki Promtail setup" width="400">
 
+### Configure Host Kernel settings
+
 * Before installing, make sure that the vm_max_map_count kernel setting is set to at least 262144
     * If Elasticsearch is used in a Docker container, the virtual memory should be increased. By default, Elasticsearch
       uses an mmapfs directory to store its indexes. The operating system's default limits on mmap count are often too
@@ -641,10 +643,24 @@ Issue https://github.com/schwabsh/log-aggregation-tools.docker-compose/issues/1
 
   ``sudo sysctl -w vm.max_map_count=262144``
 
-* Disable paid features in Elasticsearch
-    * Switch the value of Elasticsearch's ``xpack.license.self_generated.type`` setting from ``trial`` to ``basic``. The
-      easiest way to achieve this is to pass the following environment variables to the container in the Docker-compose
-      file.
+### Disable paid features in Elasticsearch
+
+As of Elasticsearch 8.0, the so-called "Searchable Snapshots" function is chargeable. This function makes it possible to
+create a fully searchable and queryable snapshot of an index, which can then be used as a backup or archive. This
+feature is typically used by larger companies or organizations that store large amounts of data and need to archive it
+in the form of snapshots.
+
+The paid version of Elasticsearch, also referred to as "Elasticsearch Enterprise," provides additional features and
+support options for organizations that require more comprehensive and professional support. This enterprise version
+offers advanced security and monitoring features, tools for managing Big Data and machine learning models, and
+specialized plugins and integration options, among other features.
+
+However, it is important to note that Elasticsearch remains available as open source software and can be downloaded and
+used for free. Most features, including basic search and analytics, remain free and available. [26]
+
+* Switch the value of Elasticsearch's ``xpack.license.self_generated.type`` setting from ``trial`` to ``basic``. The
+  easiest way to achieve this is to pass the following environment variables to the container in the Docker-compose
+  file.
 
   ```yml
   elasticsearch:
@@ -864,3 +880,5 @@ We can view these logs by filtering the log data in Kibana by:
 [24]: https://docs.fluentd.org/parser/nginx
 
 [25]: https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html
+
+[26]: https://www.elastic.co/de/pricing/

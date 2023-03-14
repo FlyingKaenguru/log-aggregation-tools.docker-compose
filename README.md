@@ -103,9 +103,9 @@ examples:
 
 ```yml
   { app="nginx" } |= "GET"
-  { app="nginx" } |~ "200|201|202"
-  { app="nginx" } != "GET"
-  { app="nginx" } !~ "200|201|202"
+    { app="nginx" } |~ "200|201|202"
+    { app="nginx" } != "GET"
+    { app="nginx" } !~ "200|201|202"
 ```
 
 #### Labels
@@ -165,7 +165,43 @@ be found at the following [link][16].
 
 ### Query DSL and Lucene query language
 
-* Elasticsearch uses Query DSL and Lucene query language which provides full-text search capability.
+In Elasticsearch, the Query DSL (Domain-Specific Language) is used to formulate search queries. The Query DSL is a
+JSON-based syntax that allows you to create and execute complex search queries. It also supports a full-text search.
+
+The Query DSL provides a variety of search types and aggregations to satisfy a wide range of search requirements. It
+also allows users to restrict search queries to specific fields, define filters, and combine complex search queries.
+
+Example of Query DSL:
+
+Suppose we have a Fluentd instance that collects logs from various applications and we want to retrieve all logs
+originating from the infrastructure applications tagged `infra`. The query DSL search query that satisfies these
+requirements may look like the following:
+
+```json
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "tag": "myapp"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+However, Elasticsearch also supports other search query languages such as Lucene query language and SQL. It is possible
+to formulate search queries in these languages and send them to Elasticsearch, but Query DSL is the preferred search
+query language recommended by Elasticsearch.
+
+A search query in the Lucene query language that also searches for the tag `infra` might look like the following:
+
+```makefile
+tag:myapp
+```
 
 ------------------------------------
 

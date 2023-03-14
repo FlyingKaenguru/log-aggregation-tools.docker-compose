@@ -16,6 +16,21 @@ There is an emphasis on good documentation, so this repository serves as a templ
 ![Fluentd](https://img.shields.io/badge/Fluentd-64a5d0?style=for-the-badge&logo=Fluentd&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
+## Requirements for the logging technology stack
+
+From a developer's perspective, there are several requirements for a logging technology stack to ensure effective and
+reliable logging. For the following test setup, which is intended to give a first insight into the functionality of the
+Elastic Stack as well as Grafana Loki, the requirements are limited to:
+
+* Free of charge: Free testing of the most important features is possible.
+* User-friendly technology stack : The technology stack is easy to use and configure.
+* Roll out with Docker Compose: A fast and easy roll out of services, on different systems, is possible.
+* Completeness: all logs are completely collected and displayed.
+* Query language is user-friendly: the Querry language is intuitive and easy to use.
+* Intuitive: The visualization tool (Grafana, Kibana) is intuitive and easy to use.
+
+Requirements such as scalability, reliability, performance, security and cost-effectiveness do not matter.
+
 # Log-Aggregation
 
 ## What Is Log Aggregation

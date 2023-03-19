@@ -51,9 +51,8 @@ and known as ELK or EFK Stack, while the abbrevitation stands for **E**lasticsea
 **F**luentD (log routing and aggregation), and **K**ibana for visualization.
 
 Elasticsearch is a search engine built on Apache Lucene. Once the log data is collected, it is stored as unstructured
-JSON objects. Both the key of the JSON object and the contents of the key are indexed. Elasticsearch indexes all data
-in every field.
-
+JSON objects. Both the key of the JSON object and the contents of the key are indexed. Elasticsearch indexes all data in
+every field.
 
 ### PLG Stack
 
@@ -62,10 +61,10 @@ agent is designed for Loki installations, but many other agents integrate seamle
 Logstash.
 
 Grafana Loki is a horizontally scalable, highly available, multi-tenant log aggregation system inspired by Prometheus.
-Unlike other logging systems, a Loki index is built from labels, leaving the original log message unindexed. Loki
-stores all data in a single object storage backend like S3. The Loki project was started at Grafana Labs in 2018 and
-is released under the AGPLv3 license. For more information about Loki, its components and functionality, please take a
-look at the official [documentation][1] or my blog post ["Logging on a large scale with Grafana Loki"][2] for a more
+Unlike other logging systems, a Loki index is built from labels, leaving the original log message unindexed. Loki stores
+all data in a single object storage backend like S3. The Loki project was started at Grafana Labs in 2018 and is
+released under the AGPLv3 license. For more information about Loki, its components and functionality, please take a look
+at the official [documentation][1] or my blog post [Logging on a large scale with Grafana Loki][2] for a more
 application-oriented approach.
 
 ## How to aggregate logs
@@ -74,19 +73,18 @@ Log collectors run on servers, pull server metrics, analyze all logs, and then t
 Elasticsearch. It is their routing mechanism that ultimately enables log analysis. Some of the most popular log agents
 are:
 
-* [Promtail][4] acquires logs, turns the logs into streams, and pushes the streams to Loki through an HTTP API.
-  It is usually deployed to every machine that has applications needed to be monitored. The Promtail agent is designed
-  for Loki installations and therefore it is the default agent for Loki.
+* [Promtail][4] acquires logs, turns the logs into streams, and pushes the streams to Loki through an HTTP API. It is
+  usually deployed to every machine that has applications needed to be monitored. The Promtail agent is designed for
+  Loki installations and therefore it is the default agent for Loki.
 
 * [Fluentd][5] is a cross-platform open source data collection software and was originally developed by Treasure Data
   under the Apache 2 license. It is written primarily in the Ruby programming language and has a plugin-architecture
   with more than 500 plugins, many developed by the community. Fluentd can connect to many data sources and outputs.
-  Most of its plugins are decentralized and are located in various Git repositories. A list of all plugins can be
-  found on the [official Fluentd site][9]. Fluentd provides an in-built buffering system that can be configured based on
-  the needs. It uses built-in parsers (JSON, Regex, CSV, etc.) for log parsing by default. Routing is based on tags.
+  Most of its plugins are decentralized and are located in various Git repositories. A list of all plugins can be found
+  on the [official Fluentd site][9]. Fluentd provides an in-built buffering system that can be configured based on the
+  needs. It uses built-in parsers (JSON, Regex, CSV, etc.) for log parsing by default. Routing is based on tags.
 
->**ⓘ** Docker provides a built-in fluentd logging driver. The logging driver sends container logs as structured log data to the
-fluentd collector.
+> **ⓘ** Docker provides a built-in fluentd logging driver. The logging driver sends container logs as structured log data to the fluentd collector.
 
 ## Data visualization tools
 
@@ -94,6 +92,7 @@ Grafana and Kibana are two open source data visualization tools used for monitor
 data sets. Both tools are widely used in log management, metrics monitoring, and data analysis.
 
 ### Grafana
+
 Grafana is an easy-to-use platform that provides users with the ability to visualize and analyze data from various
 sources such as databases, APIs, and even IoT devices. It supports a wide range of data sources, including
 Elasticsearch, Prometheus, InfluxDB, Graphite and more. Grafana has a user-friendly interface that allows users to
@@ -101,19 +100,20 @@ create and customize dashboards with different visualization types, such as grap
 extensive library of plugins and extensions that allow users to extend its functionality.
 
 ### Kibana
-Kibana on the other hand, is a part of the Elasticsearch stack and is designed to work seamlessly with
-Elasticsearch. It is a data exploration and visualization tool that allows users to search, analyze and visualize data
-stored in Elasticsearch indexes. Kibana provides a web-based interface that allows users to create and customize
-interactive visualizations and dashboards with real-time data. It supports a wide range of data types, including text,
-numeric, geospatial and time series data.
+
+Kibana on the other hand, is a part of the Elasticsearch stack and is designed to work seamlessly with Elasticsearch. It
+is a data exploration and visualization tool that allows users to search, analyze and visualize data stored in
+Elasticsearch indexes. Kibana provides a web-based interface that allows users to create and customize interactive
+visualizations and dashboards with real-time data. It supports a wide range of data types, including text, numeric,
+geospatial and time series data.
 
 ## Query Languages
 
 ### LogQL
 
-[LogQL][14] is the query language for Grafana Loki. It is inspired by PromQL (Prometheus query language) and uses log labels
-for filtering and selecting the log data. There are two types of LogQL queries. **Log queries** return the contents of
-log lines, whereas **metric queries** extend log queries to calculate values based on the query results.
+[LogQL][14] is the query language for Grafana Loki. It is inspired by PromQL (Prometheus query language) and uses log
+labels for filtering and selecting the log data. There are two types of LogQL queries. **Log queries** return the
+contents of log lines, whereas **metric queries** extend log queries to calculate values based on the query results.
 
 A LogQL query consists of two parts. The Log Stream Selector and a search expression. A stream can be selected by
 specifying one or more labels, like the following example shows.
@@ -121,7 +121,7 @@ specifying one or more labels, like the following example shows.
 This sample query searches for logs where the value of the label "container" matches the container name and also matches
 the regular expression.
 
-<img src="image/Logstream_selector.jpg" alt="Log stream selector" width="410">
+<img src="image/Logstream_selector.jpg" alt="Log stream selector" width="500">
 
 To search the stream for a certain string, a search expression can be used. This can be a simple match with `|=` or a
 regular expression using `|~`. The whole thing can also be negated by using a `!` instead of the pipe. Here are a few
@@ -163,7 +163,7 @@ http status codes of the last minute could look like this:
 sum by(code) (count_over_time({container="/nginx-app"} | logfmt | remote != ``[1m]))
 ```
 
-<img src="image/nginx_log_output.jpg" alt="nginx log output with detected fields" width="400">
+<img src="image/nginx_log_output.jpg" alt="nginx log output with detected fields" width="500">
 
 #### Loki Pattern Parser
 
@@ -250,15 +250,15 @@ There are three different ways to roll out Loki.
 * Simple scalable deployment mode
 * Microservices mode
 
->**ⓘ** To learn more about the different modes, please read the [official documentation][2].
+> **ⓘ** To learn more about the different modes, please read the [official documentation][2].
 
 In our use case, we run Loki as a monolith. This is the simplest mode of operation. Here, all microservice components of
 Loki are run within a single process as a single binary or Docker image.
 
 ### Grafana Loki with Promtail (PGL)
 
->**⚠** Before installing, make sure that the following ports are free: 49154 (for Loki), 3000 (for Grafana), 9080 (Promtail)
-  and 8080 (nginx).
+> **⚠** Before installing, make sure that the following ports are free: 49154 (for Loki), 3000 (for Grafana), 9080 (Promtail)
+and 8080 (nginx).
 
 **Approach**
 
@@ -286,22 +286,22 @@ labels:
 
 Before Promtail can send log data to Loki, it needs information about its environment and the existing applications
 whose logs are to be transmitted. To do this, Promtail uses a mechanism from Prometheus called service discovery. Just
-like Prometheus, Promtail is configured with a Scrape Configuration. This configuration contains one or more entries that
-are executed for each discovered target. In Promtail, there are several types of labels. For example, there
-are `meta-labels`, but also `__path__` labels, which Promtail uses after detection to find out where the file to be
-read is located.
+like Prometheus, Promtail is configured with a Scrape Configuration. This configuration contains one or more entries
+that are executed for each discovered target. In Promtail, there are several types of labels. For example, there
+are `meta-labels`, but also `__path__` labels, which Promtail uses after detection to find out where the file to be read
+is located.
 
 The metadata (container name, file name, etc.) determined during service detection, which can be appended to the log
 line as a label for easier identification when querying logs in Loki, can be converted to a desired form using the
-Relabel Configuration (relabel_config). For this purpose, each entry in a Relabel Configuration can, in turn, also contain
-a Relabel Configuration. This type of configuration is a set of operations that can be used, for example, to change a label
-to a different target name. It allows fine-grained control over what to include and what to discard, as well as over the
-final metadata to append to the log line (see [official documentation][11]).
+Relabel Configuration (relabel_config). For this purpose, each entry in a Relabel Configuration can, in turn, also
+contain a Relabel Configuration. This type of configuration is a set of operations that can be used, for example, to
+change a label to a different target name. It allows fine-grained control over what to include and what to discard, as
+well as over the final metadata to append to the log line (see [official documentation][11]).
 
 In our Promtail configuration [promtail-config.yaml](loki-promtail-example/promtail/config/promtail-config.yaml), the
 container logs are collected through the Docker socket and then filtered so that only Docker containers with the Docker
-labels `logging=promtail` are collected. Once the logs are collected, the existing meta labels are transformed using
-the Relabel Configuration. This gives us the container name as well as logstream and logging job.
+labels `logging=promtail` are collected. Once the logs are collected, the existing meta labels are transformed using the
+Relabel Configuration. This gives us the container name as well as logstream and logging job.
 
 ``` yml
 scrape_configs:
@@ -323,9 +323,9 @@ scrape_configs:
 ```
 
 To allow more sophisticated filtering afterwards, Promtail allows labels to be set not only from service discovery, but
-also based on the content of individual log lines. The Pipeline Stages (pipeline_stages) can be used to add or update labels,
-correct the timestamp or completely rewrite log lines. A pipeline is comprised of a set of 4 stages (see [official
-documentation][12]).
+also based on the content of individual log lines. The Pipeline Stages (pipeline_stages) can be used to add or update
+labels, correct the timestamp or completely rewrite log lines. A pipeline is comprised of a set of 4 stages (
+see [official documentation][12]).
 
 * Parsing stages (Parse the current log line and extract data out of it.)
 * Transform stages (Transform extracted data from previous stages)
@@ -387,8 +387,8 @@ Start with:
 
 The Apache HTTP server benchmarking tool "[ApacheBench][13]" can be used to generate an arbitrary number of queries.
 
-ApacheBench is a command line tool included in the `apache2-utils` package. In addition to the number of queries to send,
-a timeout limit can be configured for the query header. `ab` sends the queries, waits for a response (until a
+ApacheBench is a command line tool included in the `apache2-utils` package. In addition to the number of queries to
+send, a timeout limit can be configured for the query header. `ab` sends the queries, waits for a response (until a
 user-specified timeout), and prints statistics as a report.
 
 The following command, should generate 100 logs in the nginx-app container in the stderr stream.
@@ -402,8 +402,8 @@ After the command is executed, 100 entries are visible in the stderr stream in t
 #### Evaluation
 
 The review of the requirements is based on the previously defined
-[Requirements for the logging technology stack](#Requirements for the logging technology stack). The ratings in the table
-were made on a scale of 1 to 5, with 5 being the best rating.
+[Requirements for the logging technology stack](#Requirements for the logging technology stack). The ratings in the
+table were made on a scale of 1 to 5, with 5 being the best rating.
 
 | Criteria                       | Rating (1-5) |
 |--------------------------------|:------------:|
@@ -435,8 +435,7 @@ and offers free tutorials, e.g. in the form of YouTube videos.
 
 ### Grafana Loki with Fluentd (FGL)
 
->**⚠** Before installing, make sure that the following ports are free: 49154 (for Loki), 3000 (for Grafana), 24224 (for
-Fluentd) and 8080 (nginx).
+> **⚠** Before installing, make sure that the following ports are free: 49154 (for Loki), 3000 (for Grafana), 24224 (for Fluentd) and 8080 (nginx).
 
 **Approach**
 
@@ -448,13 +447,14 @@ Fluentd) and 8080 (nginx).
 #### Docker-Compose File for FLG
 
 The [docker-compose.yml](loki-fluent-example/docker-compose.yml) file defines the individual services (**F**luentd,
-**L**oki and **G**rafana). This includes, for example, the image to be used, the ports to be exposed, and volumes needed to
-be mounted. Unlike the configuration with Promtail, we do not connect the Docker socket to the Fluent container to access
-the logs of each container. On the other hand, we provide a logging driver for each container to send logs to Fluent.
+**L**oki and **G**rafana). This includes, for example, the image to be used, the ports to be exposed, and volumes needed
+to be mounted. Unlike the configuration with Promtail, we do not connect the Docker socket to the Fluent container to
+access the logs of each container. On the other hand, we provide a logging driver for each container to send logs to
+Fluent.
 
 The Fluentd logging driver sends the container logs as structured log data to the Fluentd collector. In addition to the
-actual log message, metadata such as `container_id`, `container_name`, and `source` are also sent in the
-structured log message.
+actual log message, metadata such as `container_id`, `container_name`, and `source` are also sent in the structured log
+message.
 
 The following example sets the log driver to fluentd and sets the fluentd-address and tag option.
 
@@ -498,9 +498,9 @@ required. This is set on port 24224, which is also exposed in the docker-compose
 
 As previously described in the section [Docker-Compose File for Fluentd](#docker-compose-file-for-fluentd), the docker
 driver sends metadata such as the container name to Fluent in addition to the logs. This value can be taken from the
-record using a `Filters` directive and the Fluentd default plugin `record_transformer` and stored as a local
-variable. In this example the three variables `tag_name`, `container` and `stream` are created. In the match
-directive they can be accessed when setting the label.
+record using a `Filters` directive and the Fluentd default plugin `record_transformer` and stored as a local variable.
+In this example the three variables `tag_name`, `container` and `stream` are created. In the match directive they can be
+accessed when setting the label.
 
 ``` xml
 <filter **>
@@ -517,14 +517,14 @@ The `match` plugin tells fluentd what to do with the data. The match directive l
 processes them. Since the most common use of the match directive is to forward logs to other systems, plugins that match
 the match directive are called output plugins.
 
-Grafana Loki has a Fluentd output plugin called `fluent-plugin-grafana-loki` that allows logs to be sent to a private Loki
-instance or Grafana Cloud. To use this plugin, it must be [installed][22] in the container. In this example, however,
-this step is skipped. A [preconfigured container image][23] from Grafana is used.
+Grafana Loki has a Fluentd output plugin called `fluent-plugin-grafana-loki` that allows logs to be sent to a private
+Loki instance or Grafana Cloud. To use this plugin, it must be [installed][22] in the container. In this example,
+however, this step is skipped. A [preconfigured container image][23] from Grafana is used.
 
-Each match directive must contain a match pattern and a `@type` parameter. The `@type` parameter specifies the output plugin
-to use. In the present Fluentd configuration, we use `@type` loki. Only events with a tag that matches the pattern are
-sent to the output destination. In this example, a wildcard pattern is used. Any events that have not yet been processed
-are sent to loki.
+Each match directive must contain a match pattern and a `@type` parameter. The `@type` parameter specifies the output
+plugin to use. In the present Fluentd configuration, we use `@type` loki. Only events with a tag that matches the
+pattern are sent to the output destination. In this example, a wildcard pattern is used. Any events that have not yet
+been processed are sent to loki.
 
 ``` xml
 <match **>
@@ -579,17 +579,18 @@ individually as a tag for each event. Here the previously created variable `cont
 ```
 
 As mentioned in the [How to aggregate logs](#how-to-aggregate-logs) section under Fluentd, there are quite a few
-different plugins that can be used for example to parse events. The `@type` parameter of the `<parse>` section specifies the
-type of parser plugin. In this example, the built-in parser [nginx][24] is used.
+different plugins that can be used for example to parse events. The `@type` parameter of the `<parse>` section specifies
+the type of parser plugin. In this example, the built-in parser [nginx][24] is used.
 
 ```xml
+
 <filter app>
-  @type parser
-  key_name log
-  reserve_data true
-  <parse>
-    @type nginx
-  </parse>
+    @type parser
+    key_name log
+    reserve_data true
+    <parse>
+        @type nginx
+    </parse>
 </filter>
 ```
 
@@ -599,8 +600,7 @@ necessary for later querying, as with the promtaillogs.
 
 <img src="image/nginx_log_output.jpg" alt="nginx log output with detected fields" width="400">
 
->**ⓘ** In Promtail, too, the logs can be piped into the desired form in advance. Fluentd, however, comes with a ready-made
-plugin.
+> **ⓘ** In Promtail, too, the logs can be piped into the desired form in advance. Fluentd, however, comes with a ready-made plugin.
 
 For more information Fluentd and its configuration, see the [official documentation][21].
 
@@ -710,10 +710,10 @@ large community that helps with questions and offers free tutorials, for example
 
 ### Configure Host Kernel settings
 
->**⚠** Before installing, make sure that the vm_max_map_count kernel setting is set to at least 262144
+> **⚠** Before installing, make sure that the vm_max_map_count kernel setting is set to at least 262144
 > * If Elasticsearch is used in a Docker container, the virtual memory should be increased. By default, Elasticsearch
->   uses an mmapfs directory to store its indexes. The operating system's default limits on mmap count are often too
->   low, which can lead to out of memory exceptions.
+    > uses an mmapfs directory to store its indexes. The operating system's default limits on mmap count are often too
+    > low, which can lead to out of memory exceptions.
 
 [Documentation][25]
 
@@ -723,10 +723,10 @@ On Linux, the limits can be increased with the following command as root:
 
 ### Disable paid features in Elasticsearch
 
-As of Elasticsearch 8.0, the so-called "Searchable Snapshots" functionality requires payment. This functionality makes it
-possible to create a fully searchable and queryable snapshot of an index, which can then be used as a backup or archive.
-This feature is typically used by larger companies or organizations that store large amounts of data and need to archive
-it in the form of snapshots.
+As of Elasticsearch 8.0, the so-called "Searchable Snapshots" functionality requires payment. This functionality makes
+it possible to create a fully searchable and queryable snapshot of an index, which can then be used as a backup or
+archive. This feature is typically used by larger companies or organizations that store large amounts of data and need
+to archive it in the form of snapshots.
 
 The paid version of Elasticsearch, also referred to as "Elasticsearch Enterprise," provides additional features and
 support options for organizations that require more comprehensive and professional support. This enterprise version
@@ -736,8 +736,8 @@ specialized plugins and integration options, among other features.
 However, it is important to note that Elasticsearch remains available as open source software and can be downloaded and
 used for free. Most features, including basic search and analytics, remain free and available. [26]
 
-* Switch the value of Elasticsearch's `xpack.license.self_generated.type` setting from `trial` to `basic`. The
-  easiest way to achieve this is to pass the following environment variables to the container in the Docker-compose file.
+* Switch the value of Elasticsearch's `xpack.license.self_generated.type` setting from `trial` to `basic`. The easiest
+  way to achieve this is to pass the following environment variables to the container in the Docker-compose file.
 
   ``` yml
   elasticsearch:
@@ -751,7 +751,7 @@ used for free. Most features, including basic search and analytics, remain free 
 
 ### Elasticsearch, Fluentd, Kibana (EFK)
 
->**⚠** Before installing, make sure that the following ports are free: 5601 (for Kibana), 9200 (for Elasticsearch), 24224
+> **⚠** Before installing, make sure that the following ports are free: 5601 (for Kibana), 9200 (for Elasticsearch), 24224
 (Fluentd) and 8080 (nginx).
 
 **Approach**
@@ -764,14 +764,15 @@ used for free. Most features, including basic search and analytics, remain free 
 
 Docker Compose is a tool for defining and running multi-container Docker applications.
 
-The [docker-compose.yml](efk-example/docker-compose.yml) file defines the individual services (**E**lasticsearch, **F**luentd,
-**K**ibana). This includes, for example, the image to be used, the ports to be exposed, and volumes needed to be mounted. As
-before when creating the [docker-compose.yml for FLG](#docker-Compose-file-for-FLG), we provide a logging driver for
-each container to send logs to Fluent.
+The [docker-compose.yml](efk-example/docker-compose.yml) file defines the individual services (**E**lasticsearch, **F**
+luentd,
+**K**ibana). This includes, for example, the image to be used, the ports to be exposed, and volumes needed to be
+mounted. As before when creating the [docker-compose.yml for FLG](#docker-Compose-file-for-FLG), we provide a logging
+driver for each container to send logs to Fluent.
 
 The Fluentd logging driver sends the container logs as structured log data to the Fluentd collector. In addition to the
-actual log message, metadata such as `container_id`, `container_name`, and `source` are also sent in the
-structured log message.
+actual log message, metadata such as `container_id`, `container_name`, and `source` are also sent in the structured log
+message.
 
 The following example sets the log driver to fluentd and sets the fluentd-address and tag option.
 
@@ -806,8 +807,8 @@ As before in FLG, Fluentd needs a configuration to know which events are allowed
 propagated.
 
 The individual directives like `source` and `match` are described in more detail in the
-section [Prepare configuration file for Fluentd in the FLG stack](#prepare-configuration-file-for-fluentd-in-the-fLG-stack).
-In contrast to the FLG stack, the `match` directive uses the Elasticsearch plugin.
+section [Prepare configuration file for Fluentd in the FLG stack](#prepare-configuration-file-for-fluentd-in-the-fLG-stack)
+. In contrast to the FLG stack, the `match` directive uses the Elasticsearch plugin.
 
 ``` xml
 <match *.**>
@@ -835,8 +836,8 @@ Alternatively you can also use the [run](efk-example/run.sh) file which calls bo
 
 The startup of the containers may take a moment.
 
-Elasticsearch is available on port `9200`. If you send a searchquarry with `fluentd-*` as index you get a result
-similar to the following output. http://localhost:9200/fluentd-*/_search
+Elasticsearch is available on port `9200`. If you send a searchquarry with `fluentd-*` as index you get a result similar
+to the following output. http://localhost:9200/fluentd-*/_search
 
 <img src="image/elasticsearch_index_fluentd.jpg" width="600">
 
@@ -870,9 +871,9 @@ http://localhost:9200/fluentd-20230307,fluentd-20230308/_search
 The logs can also be visualized in Kibana, which is accessible via port `5601`. http://localhost:5601
 
 However, Kibana must first be configured when it is called for the first time. For this we create a data view. Click
-on "Discover" in the menu and then on the button "Create data view". Give the view a name, which can be freely
-chosen, and enter `fluentd-*` under index pattern. To match multiple indexes, we use a wildcard (*). This way logs of
-several days are displayed. Finally, click "Create index pattern".
+on "Discover" in the menu and then on the button "Create data view". Give the view a name, which can be freely chosen,
+and enter `fluentd-*` under index pattern. To match multiple indexes, we use a wildcard (*). This way logs of several
+days are displayed. Finally, click "Create index pattern".
 
 <img src="image/Kibana_index.jpg" width="600">
 
@@ -884,13 +885,12 @@ Alternatively, the supplied dashboard can also be used. Import Data View and Das
 
 ``curl -X POST localhost:5601/api/saved_objects/_import?createNewCopies=true -H "kbn-xsrf: true" --form file=@kibana/fluentd-data-view-dashboard.ndjson``
 
->**ⓘ** Saved objects can only be imported into the same version, a newer minor on the same major, or the next major.
-Exported saved objects are not backwards compatible and cannot be imported into an older version of Kibana.
+> **ⓘ** Saved objects can only be imported into the same version, a newer minor on the same major, or the next major. Exported saved objects are not backwards compatible and cannot be imported into an older version of Kibana.
 
 The Apache HTTP server benchmarking tool "[ApacheBench][13]" can be used to generate an arbitrary number of queries.
 
-ApacheBench is a command line tool included in the `apache2-utils` package. In addition to the number of queries to send,
-a timeout limit can be configured for the query header. ab sends the queries, waits for a response (until a
+ApacheBench is a command line tool included in the `apache2-utils` package. In addition to the number of queries to
+send, a timeout limit can be configured for the query header. ab sends the queries, waits for a response (until a
 user-specified timeout), and prints statistics as a report.
 
 The following command, should generate 100 logs in the nginx-app container in the stderr stream.
@@ -984,12 +984,14 @@ logs in order to identify and fix them. They can also learn how to create dashbo
 important metrics.
 
 After learning about the aforementioned technology stacks, there are several ways to further expand one's knowledge. One
-option could be to explore another technology stack such as ELK (**E**lasticsearch, **L**ogstash, and **K**ibana) instead of EFK.
+option could be to explore another technology stack such as ELK (**E**lasticsearch, **L**ogstash, and **K**ibana)
+instead of EFK.
 
 Another possible step is to delve into cloud infrastructures, as many of the technology stacks are developed for use in
 the cloud. Therefore, working with them can also improve one's skills in using cloud infrastructure.
 
-One point left open in the paper is to fully address the lack of Nginx logs when using the FGL stack (**F**luentd, **G**rafana,
+One point left open in the paper is to fully address the lack of Nginx logs when using the FGL stack (**F**luentd, **G**
+rafana,
 **L**oki) see Issue https://github.com/schwabsh/log-aggregation-tools.docker-compose/issues/1.
 
 <!---------------------------------------------------------------------------------------------------------------------->

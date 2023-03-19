@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -735,8 +735,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "sum by (status) (count_over_time({container=\"nginx-app\"} | pattern `<_> - - <_> \"<method> <_> <_>\" <status> <_> <_> \"<_>\" <_>`[1m])) ",
+          "editorMode": "builder",
+          "expr": "sum by (status) (count_over_time({container=\"nginx-app\"} | pattern `<remote_addr> - - <_> \"<method> <_> <_>\" <status> <_> <_> \"<_>\" <_>` | remote_addr =~ `^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$` [1m])) ",
           "queryType": "range",
           "refId": "A"
         }
@@ -768,7 +768,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": []
       },
@@ -786,14 +787,14 @@
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "count"
           ],
           "fields": "",
           "values": false
         },
         "showUnfilled": true,
         "text": {
-          "valueSize": 1
+          "valueSize": 15
         }
       },
       "pluginVersion": "9.2.2",
@@ -803,8 +804,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "builder",
-          "expr": "sum by(remote_addr) (count_over_time({container=\"nginx-app\", logstream=\"stdout\"} | pattern `<remote_addr> - -` [$__range]))",
+          "editorMode": "code",
+          "expr": "sum by (remote_addr) (count_over_time({container=\"nginx-app\"} | pattern `<remote_addr> - - ` | remote_addr =~ `^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$` [1m]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -840,8 +841,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "builder",
-          "expr": "{container=\"nginx-app\", logstream=\"stdout\"} | pattern `<remote_addr> - - <time_local> \"<method> <path> <_>\" <status> <_> <_> \"<_>\" <_>` | json | line_format `{{.remote_addr}} ➡️ {{.method}} on Path '{{.path}}' and HTTP status: {{.status}}`",
+          "editorMode": "code",
+          "expr": "{container=\"nginx-app\", logstream=\"stdout\"} | pattern `<remote_addr> - - <time_local> \"<method> <path> <_>\" <status> <_> <_> \"<_>\" <_>` | json | line_format `{{.remote_addr}} ➡️ {{.method}} on Path '{{.path}}' and HTTP status: {{.status}}` | remote_addr =~ `^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$`",
           "queryType": "range",
           "refId": "A"
         }
@@ -940,7 +941,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "stdout",
           "value": "stdout"
         },
@@ -970,13 +971,13 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Promtail",
   "uid": "xyei6STVz",
-  "version": 9,
+  "version": 1,
   "weekStart": ""
 }

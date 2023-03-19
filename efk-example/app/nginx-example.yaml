@@ -10,7 +10,7 @@ services:
       driver: fluentd
       options:
         fluentd-address: localhost:24224
-        tag: app
+        tag: app.nginx
 
 networks:
     external:

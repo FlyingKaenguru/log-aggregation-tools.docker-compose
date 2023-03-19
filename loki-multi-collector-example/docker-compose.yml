@@ -40,7 +40,7 @@ services:
       - '24224:24224'
     volumes:
       - type: bind
-        source: ./fluentd/config/fluent.conf
+        source: ../loki-fluent-example/fluentd/config/fluent.conf
         target: /fluentd/etc/fluent.conf
 
   promtail:
@@ -54,7 +54,7 @@ services:
       job: "infra"
     volumes:
       # custom config will read logs from the containers of this project
-      - ./promtail/config/promtail-config.yaml:/etc/promtail/config.yml
+      - ../loki-promtail-example/promtail/config/promtail-config.yaml:/etc/promtail/config.yml
       # to read container labels and logs
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -76,7 +76,8 @@ services:
       job: "infra"
     volumes:
       # automatically configure the loki datasource
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ../loki-promtail-example/grafana/provisioning/:/etc/grafana/provisioning/
+      - ../loki-fluent-example/grafana/provisioning/dashboard/fluentd.json:/etc/grafana/provisioning/dashboard/fluentd.json
     networks:
       - network
     logging:

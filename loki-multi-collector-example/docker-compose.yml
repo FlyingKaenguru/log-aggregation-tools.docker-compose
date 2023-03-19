@@ -77,7 +77,7 @@ services:
     volumes:
       # automatically configure the loki datasource
       - ../loki-promtail-example/grafana/provisioning/:/etc/grafana/provisioning/
-      - ../loki-fluent-example/grafana/provisioning/dashboard/fluentd.json:/etc/grafana/provisioning/dashboard/fluentd.json
+      - ../loki-fluent-example/grafana/provisioning/dashboards/fluentd.json:/etc/grafana/provisioning/dashboards/fluentd.json
     networks:
       - network
     logging:

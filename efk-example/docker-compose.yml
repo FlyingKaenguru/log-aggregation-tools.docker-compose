@@ -44,9 +44,6 @@ services:
       options:
         fluentd-address: localhost:24224
         tag: infra
-    volumes:
-      - ./kibana/fluentd-index.ndjson:/usr/share/kibana/config/fluentd-index.ndjson
-      - ./kibana/fluentd-nginx-dashboard.ndjson:/usr/share/kibana/config/fluentd-nginx-dashboard.ndjson
 
 networks:
   network:

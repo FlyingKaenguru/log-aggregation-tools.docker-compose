@@ -869,9 +869,6 @@ Elasticsearch allows you to query multiple indices at the same time, so it isn't
 
 http://localhost:9200/fluentd-20230307,fluentd-20230308/_search
 
-
-------------------
-
 The logs can also be visualized in Kibana, which is accessible via port ``5601``. http://localhost:5601
 
 However, Kibana must first be configured when it is called for the first time. For this we create a data view. Click
@@ -884,6 +881,16 @@ several days are displayed. Finally, click ``Create index pattern``.
 Kibana is now configured to use the Elasticsearch data.
 
 <img src="image/Kibana_discover.jpg" width="600">
+
+------------------
+Alternatively, the supplied dashboard can also be used. Import Data View and Dashboard:
+
+``curl -X POST localhost:5601/api/saved_objects/_import?createNewCopies=true -H "kbn-xsrf
+: true" --form file=@fluentd-index.ndjson``
+
+*Hint: Saved objects can only be imported into the same version, a newer minor on the same major, or the next major.
+Exported saved objects are not backwards compatible and cannot be imported into an older version of Kibana. See the
+table below for compatibility examples:*
 
 ______________
 
@@ -910,6 +917,22 @@ We can view these logs by filtering the log data in Kibana by:
   } ```
 
 <img src="image/Kibana_Fluentd_AppacheBenchmark.jpg" width="600">
+
+#### Evaluation
+
+The review of the requirements is based on the previously
+defined [Requirements for the logging technology stack](#Requirements for the logging technology stack). The ratings in
+the table were made on a scale of 1 to 5, with 5 being the highest rating.
+
+| Criteria                       | Rating (1-5) |
+|--------------------------------|:------------:|
+| Free of charge                 | 5            |
+| User-friendly technology stack | 3            |
+| Roll out with Docker Compose   | 5            |
+| Completeness                   | 1            |
+| Query language is user-friendly| 5            |
+| Intuitive visualization tool   | 4            |
+| Documentation                  | 3            |
 
 # Conclusion:
 

@@ -1,7 +1,5 @@
 version: "3.8"
 
-# set env variable COMPOSE_PROJECT_NAME and
-# label com.docker.compose.project
 name: loki-promtail
 
 services:
